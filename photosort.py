@@ -1,3 +1,4 @@
+import argparse
 from pathlib import Path
 
 def check_valid_path( path: Path ):
@@ -17,8 +18,23 @@ def check_valid_path( path: Path ):
 
     return path_is_valid, message
 
+def get_command_line_args():
+    parser = argparse.ArgumentParser(
+        description = "List all image files in a directory and its subdirectories."
+    )
+    parser.add_argument(
+        "-directory",
+        "-d",
+        help = "Path to the root image directory"
+    )
+    return parser.parse_args()
+   
 def main():
-    path_str = input( "Enter directory path: " ).strip()
+    args = get_command_line_args()
+    if args.directory:
+        path_str = args.directory
+    else:
+        path_str = input( "Enter directory path: " ).strip()
     path = Path( path_str )
     (valid, message) = check_valid_path( path )
     print( message )
