@@ -1,25 +1,27 @@
 from pathlib import Path
 
 def path_is_valid( path: Path ):
-    path_is_valid = False;
+    path_is_valid = False
+    message = ''
 
     if path.exists():
         if path.is_dir():
-            print( f"{path} is a directory" )
-            path_is_valid = True;
+            path_is_valid = True
+            message = f"{path} is a directory"
         elif path.is_file():
-            print( f"{path} is a file" )
+            message = f"{path} is a file"
         else:
-            print( f"{path} exists but is not a directory or a file" )
+            message = f"{path} exists but is not a directory or a file"
     else:
-        print( f"{path} does not exist" )
+        message = f"{path} does not exist"
 
-    return path_is_valid
+    return path_is_valid, message
 
 def main():
     path_str = input( "Enter directory path: " ).strip()
     path = Path( path_str )
-    path_is_valid( path )
+    (valid, message) = path_is_valid( path )
+    print( message )
 
 if __name__ == "__main__":
     main()
