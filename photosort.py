@@ -23,18 +23,15 @@ def get_command_line_args():
         description = "List all image files in a directory and its subdirectories."
     )
     parser.add_argument(
-        "-directory",
-        "-d",
+        "-path",
+        "-p",
         help = "Path to the root image directory"
     )
     return parser.parse_args()
    
 def main():
     args = get_command_line_args()
-    if args.directory:
-        path_str = args.directory
-    else:
-        path_str = input( "Enter directory path: " ).strip()
+    path_str = args.path if args.path else input( "Enter path to the root image directory: " ).strip()
     path = Path( path_str )
     (valid, message) = check_valid_path( path )
     print( message )
