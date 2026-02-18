@@ -1,6 +1,6 @@
 from pathlib import Path
 
-def path_is_valid( path: Path ):
+def check_valid_path( path: Path ):
     path_is_valid = False
     message = ''
 
@@ -20,7 +20,7 @@ def path_is_valid( path: Path ):
 def main():
     path_str = input( "Enter directory path: " ).strip()
     path = Path( path_str )
-    (valid, message) = path_is_valid( path )
+    (valid, message) = check_valid_path( path )
     print( message )
 
 if __name__ == "__main__":
