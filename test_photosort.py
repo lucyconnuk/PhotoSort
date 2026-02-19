@@ -5,7 +5,7 @@ from pathlib import Path
 test_check_valid_path_data = [
 
     # Path() returns the current directory.
-    ( Path(), [True, ". is a directory"] ),
+    ( Path(), [True, "Directory is: ."] ),
 
     # Path(__file__) returns the current file.
     ( Path(__file__), [False, f"{__file__} is a file"] ),
@@ -22,3 +22,17 @@ def test_check_valid_path( args, expected ):
     (valid, message) = photosort.check_valid_path( args )
     assert valid == expected[0]
     assert message == expected[1]
+
+def test_get_files():
+    current_directory = Path()
+    current_file = Path(__file__)
+    paths = [ current_directory, current_file ]
+    assert photosort.get_files( paths ) == [ current_file ]
+
+def test_get_image_files():
+    current_directory = Path()
+    current_file = Path(__file__)
+    image_file_1 = Path( "test.jpg" )
+    image_file_2 = Path( "test.tiff" )
+    paths = [ current_directory, current_file, image_file_1, image_file_2 ]
+    assert photosort.get_image_files( paths ) == [ image_file_1, image_file_2 ]
