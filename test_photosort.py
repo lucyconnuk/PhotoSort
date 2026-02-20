@@ -36,3 +36,11 @@ def test_get_image_files():
     image_file_2 = Path( "test.tiff" )
     paths = [ current_directory, current_file, image_file_1, image_file_2 ]
     assert photosort.get_image_files( paths ) == [ image_file_1, image_file_2 ]
+
+def test_get_xmp_files():
+    current_directory = Path()
+    current_file = Path(__file__)
+    xmp_file_1 = Path( "test.jpg.xmp" )
+    xmp_file_2 = Path( "test.tiff.xmp" )
+    paths = [ current_directory, current_file, xmp_file_1, xmp_file_2 ]
+    assert photosort.get_xmp_files( paths ) == [ xmp_file_1, xmp_file_2 ]

@@ -30,7 +30,7 @@ def get_command_line_args():
         help = "Path to the root image directory",
 
         # TODO Remove this test default setting
-        default = r'C:\Users\Public\Pictures\PhotoOrganizer\Digital\Mary\2006'
+        default = r'C:\Users\Public\Pictures\PhotoOrganizer\Digital\Mary\2006\2006-03\2006-03-06'
     )
     return parser.parse_args()
 
@@ -48,19 +48,40 @@ def get_image_files( files: list[Path] ):
             images.append(file)
     return images
 
+def get_xmp_files( files: list[Path] ):
+    xmp_files = []
+    for file in files:
+        if file.suffix.lower() == ".xmp":
+            xmp_files.append(file)
+    return xmp_files
+
 def main():
+
+    # Get arguments from the default values, the command line, or the user.
     args = get_command_line_args()
     path_str = args.path if args.path else input( "Enter path to the root image directory: " ).strip()
     path = Path( path_str )
+
+    # Check that the root image directory path points to a valid directory.
     (valid, message) = check_valid_path( path )
     print( message )
     if valid:
-        print( "Images are: ")
+
+        # Find all the files in the directory.
         files_and_dirs = path.rglob("*")
         files = get_files( files_and_dirs )
+        
+        # Find all the image files in the set.
+        print( "Images are: ")
         images = get_image_files( files )
         for image in images:
             print( image.name )
+
+        # Find all the XMP files in the set.
+        print( "XMP files are: ")
+        xmp_files = get_xmp_files( files )
+        for xmp_file in xmp_files:
+            print( xmp_file.name )
 
 if __name__ == "__main__":
     main()
