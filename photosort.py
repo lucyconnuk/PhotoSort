@@ -1,5 +1,13 @@
 import argparse
+from classes.Camera import Camera
+from classes.Image import Image
+from classes.ImageCaptureType import ImageCaptureType
 from pathlib import Path
+
+# TODO:
+# - move file stuff to separate class
+# - use list comprehension where appropriate
+# - develop main
 
 IMAGE_EXTENSIONS = {'.jpg', '.jpeg', '.png', '.gif', '.bmp', '.tiff', '.webp'}
 
@@ -82,6 +90,15 @@ def main():
         xmp_files = get_xmp_files( files )
         for xmp_file in xmp_files:
             print( xmp_file.name )
+
+    else:
+        my_image = Image( "test.jpg", initial_capture=ImageCaptureType.Film )
+        print( my_image )
+
+    camera_data_file = Path( r'./data/cameras.csv' )
+    cameras = Camera.load_all( camera_data_file )
+    for camera in cameras:
+        print( camera )
 
 if __name__ == "__main__":
     main()
