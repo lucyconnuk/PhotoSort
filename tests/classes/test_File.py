@@ -1,4 +1,4 @@
-import photosort
+from classes.File import File
 import pytest
 from pathlib import Path
 
@@ -19,7 +19,7 @@ test_check_valid_path_data = [
 
 @pytest.mark.parametrize( "args, expected", test_check_valid_path_data )
 def test_check_valid_path( args, expected ):
-    (valid, message) = photosort.check_valid_path( args )
+    (valid, message) = File.check_valid_path( args )
     assert valid == expected[0]
     assert message == expected[1]
 
@@ -27,7 +27,7 @@ def test_get_files():
     current_directory = Path()
     current_file = Path(__file__)
     paths = [ current_directory, current_file ]
-    assert photosort.get_files( paths ) == [ current_file ]
+    assert File.get_files( paths ) == [ current_file ]
 
 def test_get_image_files():
     current_directory = Path()
@@ -35,7 +35,7 @@ def test_get_image_files():
     image_file_1 = Path( "test.jpg" )
     image_file_2 = Path( "test.tiff" )
     paths = [ current_directory, current_file, image_file_1, image_file_2 ]
-    assert photosort.get_image_files( paths ) == [ image_file_1, image_file_2 ]
+    assert File.get_image_files( paths ) == [ image_file_1, image_file_2 ]
 
 def test_get_xmp_files():
     current_directory = Path()
@@ -43,4 +43,4 @@ def test_get_xmp_files():
     xmp_file_1 = Path( "test.jpg.xmp" )
     xmp_file_2 = Path( "test.tiff.xmp" )
     paths = [ current_directory, current_file, xmp_file_1, xmp_file_2 ]
-    assert photosort.get_xmp_files( paths ) == [ xmp_file_1, xmp_file_2 ]
+    assert File.get_xmp_files( paths ) == [ xmp_file_1, xmp_file_2 ]

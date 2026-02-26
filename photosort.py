@@ -1,32 +1,12 @@
 import argparse
 from classes.Camera import Camera
+from classes.File import File
 from classes.Image import Image
 from classes.ImageCaptureType import ImageCaptureType
 from pathlib import Path
 
 # TODO:
-# - move file stuff to separate class
-# - use list comprehension where appropriate
 # - develop main
-
-IMAGE_EXTENSIONS = {'.jpg', '.jpeg', '.png', '.gif', '.bmp', '.tiff', '.webp'}
-
-def check_valid_path( path: Path ):
-    path_is_valid = False
-    message = ''
-
-    if path.exists():
-        if path.is_dir():
-            path_is_valid = True
-            message = f"Directory is: {path}"
-        elif path.is_file():
-            message = f"{path} is a file"
-        else:
-            message = f"{path} exists but is not a directory or a file"
-    else:
-        message = f"{path} does not exist"
-
-    return path_is_valid, message
 
 def get_command_line_args():
     parser = argparse.ArgumentParser(
@@ -42,27 +22,6 @@ def get_command_line_args():
     )
     return parser.parse_args()
 
-def get_files( files_and_dirs: list[Path] ):
-    files = []
-    for file_or_dir in files_and_dirs:
-        if file_or_dir.is_file():
-            files.append( file_or_dir )
-    return files
-
-def get_image_files( files: list[Path] ):
-    images = []
-    for file in files:
-        if file.suffix.lower() in IMAGE_EXTENSIONS:
-            images.append(file)
-    return images
-
-def get_xmp_files( files: list[Path] ):
-    xmp_files = []
-    for file in files:
-        if file.suffix.lower() == ".xmp":
-            xmp_files.append(file)
-    return xmp_files
-
 def main():
 
     # Get arguments from the default values, the command line, or the user.
@@ -71,23 +30,23 @@ def main():
     path = Path( path_str )
 
     # Check that the root image directory path points to a valid directory.
-    (valid, message) = check_valid_path( path )
+    (valid, message) = File.check_valid_path( path )
     print( message )
     if valid:
 
         # Find all the files in the directory.
         files_and_dirs = path.rglob("*")
-        files = get_files( files_and_dirs )
+        files = File.get_files( files_and_dirs )
         
         # Find all the image files in the set.
         print( "Images are: ")
-        images = get_image_files( files )
+        images = File.get_image_files( files )
         for image in images:
             print( image.name )
 
         # Find all the XMP files in the set.
         print( "XMP files are: ")
-        xmp_files = get_xmp_files( files )
+        xmp_files = File.get_xmp_files( files )
         for xmp_file in xmp_files:
             print( xmp_file.name )
 
