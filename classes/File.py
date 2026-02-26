@@ -1,9 +1,6 @@
 from dataclasses import dataclass
 from pathlib import Path
 
-# TODO:
-# - use list comprehension where appropriate
-
 IMAGE_EXTENSIONS = {'.jpg', '.jpeg', '.png', '.gif', '.bmp', '.tiff', '.webp'}
 
 @dataclass( frozen=True, slots=True )
@@ -30,24 +27,12 @@ class File:
 
     @staticmethod
     def get_files( files_and_dirs: list[Path] ) -> list[Path]:
-        files = []
-        for file_or_dir in files_and_dirs:
-            if file_or_dir.is_file():
-                files.append( file_or_dir )
-        return files
+        return [ file_or_dir for file_or_dir in files_and_dirs if file_or_dir.is_file() ]
 
     @staticmethod
     def get_image_files( files: list[Path] ) -> list[Path]:
-        images = []
-        for file in files:
-            if file.suffix.lower() in IMAGE_EXTENSIONS:
-                images.append(file)
-        return images
+        return [ file for file in files if file.suffix.lower() in IMAGE_EXTENSIONS ]
 
     @staticmethod
     def get_xmp_files( files: list[Path] ) -> list[Path]:
-        xmp_files = []
-        for file in files:
-            if file.suffix.lower() == ".xmp":
-                xmp_files.append(file)
-        return xmp_files
+        return [ file for file in files if file.suffix.lower() == ".xmp" ]
