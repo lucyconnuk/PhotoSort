@@ -55,7 +55,8 @@ def main():
         print( my_image )
 
     camera_data_file = Path( r'./data/cameras.csv' )
-    cameras = Camera.load_all( camera_data_file )
+    cameras_df = Camera.load_all( camera_data_file )
+    cameras = Camera.dataframe_to_list( cameras_df )
     for camera in cameras:
         print( camera )
 

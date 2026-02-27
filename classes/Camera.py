@@ -6,15 +6,21 @@ from typing import Optional
 from pathlib import Path
 import pandas
 
+DATA_FILE_DATE_COLUMNS = [ "to_date", "from_date" ]
+DATA_FILE_DATE_FORMAT = "yyyy-MM-dd"
+PARSE_DATE_FORMAT = r"%Y-%m-%d"
+PARSE_DATE_FORMAT_SHORT = r"%Y-%m"
+
 # Make this class type-safe and memory-efficient, using frozen and slots parameters.
 # See https://docs.python.org/3/library/dataclasses.html#frozen-instances
 # and https://github.com/orgs/community/discussions/168147 
 @dataclass( frozen=True, slots=True )
 class Camera:
     """
-    A physical device which captures Images. Capture can be on Film, or Digital.
-    Identifiable by its make and model, and if necessary an instance no.
-    Has an Owner and optional usage to and from dates.
+    A physical device which captures Images. 
+    Image Capture Type can be straight to Digital, or scanned from Film.
+    Identifiable by its Make and Model, and if necessary an Instance no.
+    Has an Owner and optional usage To and From Dates.
     """
     make: str
     model: str
@@ -28,20 +34,12 @@ class Camera:
     # See https://realpython.com/ref/glossary/cls/
     @classmethod
     def from_dict( cls, data: dict ) -> Camera:
-        if data.get( "image_capture_type" ) is not None:
-            data["image_capture_type"] = ImageCaptureType( data["image_capture_type"] )
 
-        if data.get( "instance" ) is not None:
-            data["instance"] = int( data["instance"] )
-
-        if data.get( "owner" ):
-            data["owner"] = Owner( name=data["owner"].strip() )
-
-        if data.get( "from_date" ) is not None:
-            data["from_date"] = cls.parse_date( data["from_date"] )
-
-        if data.get( "to_date" ) is not None:
-            data["to_date"] = cls.parse_date( data["to_date"] )
+        cls.validate_image_capture_type( data, "image_capture_type" )
+        cls.validate_owner( data, "owner" )
+        cls.validate_int( data, "instance" )
+        cls.validate_date( data, "from_date" )
+        cls.validate_date( data, "to_date" )
 
         # Coding note: **data means "all the values in data"
         # So here we are passing all the values in the data dict to the cls() method
@@ -49,23 +47,10 @@ class Camera:
         return cls(**data)
 
     @staticmethod
-    def load_all( camera_data_file: Path ) -> list[Camera]:
+    def dataframe_to_list( cameras_df: pandas.DataFrame ) -> list[Camera]:
         """
-        Load all Camera data from a csv file and return a list of Cameras.
-
-        Parameters:
-            camera_data_file (Path): Path to camera data file
-
-        Returns:
-            list[Camera]: List of Cameras.
+        Convert Camera data from dataframe to list of Cameras.
         """
-
-        # Get data from csv file into dataframe, using pandas.read_csv.
-        cameras_df = pandas.read_csv( 
-            camera_data_file,
-            parse_dates=[ "to_date", "from_date" ],
-            date_format="yyyy-MM-dd"
-        )
 
         # Pandas fills empty spaces in the dataframe with the floating point value 'nan'.
         # Replace these with None, using pandas.DataFrame.replace.
@@ -82,22 +67,48 @@ class Camera:
         return [ Camera.from_dict( record ) for record in cameras_ld ]
 
     @staticmethod
+    def load_all( camera_data_file: Path ) -> pandas.DataFrame:
+        """
+        Get all Camera data from csv file camera_data_file.
+        """
+        return pandas.read_csv( 
+            camera_data_file,
+            parse_dates = DATA_FILE_DATE_COLUMNS,
+            date_format = DATA_FILE_DATE_FORMAT
+        )
+
+    @staticmethod
     def parse_date( date_str: str ) -> Optional[date]:
         """
-        Parse a date string, which can be in one of two formats, and return a date, or None.
-
-        Parameters:
-            date_str (str): Date string in year-month-day or year-month format.
-
-        Returns:
-            date: Valid date, or None.
+        Parse a date string, which can be in year-month-day or year-month format,
+        and return a valid date, or None.
         """
         camera_date = None
         try:
-            camera_date = date.strptime( date_str, "%Y-%m-%d" ) 
+            camera_date = date.strptime( date_str, PARSE_DATE_FORMAT ) 
         except ValueError:
             try:
-                camera_date = date.strptime( date_str, "%Y-%m" ) 
+                camera_date = date.strptime( date_str, PARSE_DATE_FORMAT_SHORT ) 
             except ValueError:
                 camera_date = None
         return camera_date
+
+    @staticmethod
+    def validate_date( data: dict, field_name: str ):
+        if data.get( field_name ) is not None:
+            data[field_name] = Camera.parse_date( data[field_name] )
+
+    @staticmethod
+    def validate_image_capture_type( data: dict, field_name: str ):
+        if data.get( field_name ) is not None:
+            data[field_name] = ImageCaptureType( data[field_name] )
+
+    @staticmethod
+    def validate_int( data: dict, field_name: str ):
+        if data.get( field_name ) is not None:
+            data[field_name] = int( data[field_name] )
+
+    @staticmethod
+    def validate_owner( data: dict, field_name: str ):
+        if data.get( field_name ):
+            data[field_name] = Owner( name=data[field_name].strip() )
