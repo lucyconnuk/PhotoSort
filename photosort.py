@@ -3,6 +3,7 @@ from classes.Camera import Camera
 from classes.File import File
 from classes.Image import Image
 from classes.ImageCaptureType import ImageCaptureType
+from classes.Owner import Owner
 from pathlib import Path
 
 # TODO:
@@ -59,6 +60,12 @@ def main():
     cameras = Camera.dataframe_to_list( cameras_df )
     for camera in cameras:
         print( camera )
+
+    owner_data_file = Path( r'./data/owners.csv' )
+    owners_df = Owner.load_all( owner_data_file )
+    owners = Owner.dataframe_to_list( owners_df )
+    for owner in owners:
+        print( owner )
 
 if __name__ == "__main__":
     main()
