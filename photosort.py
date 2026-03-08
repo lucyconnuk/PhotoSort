@@ -4,8 +4,10 @@ from classes.File import File
 #from classes.ImageCaptureType import ImageCaptureType
 from classes.Owner import Owner
 from classes.PathFormat import PathFormat
-
+import logging
 from pathlib import Path
+
+logger = logging.getLogger(__name__)
 
 # TODO:
 # - develop main
@@ -26,14 +28,25 @@ def get_command_line_args():
 
 def main():
 
+    # Setup logging
+    logging.basicConfig( 
+        filename=r'logs\photosort.log', 
+        level=logging.INFO,
+        format='%(asctime)s %(levelname)s: %(message)s',
+        datefmt='%Y-%m-%d %H:%M:%S'
+    )
+    logger.info( "-----------------------------------------------------------" )
+
     # Get arguments from the default values, the command line, or the user.
     args = get_command_line_args()
+    logger.info( f"Args are: {args}" )
     path_str = args.path if args.path else input( "Enter path to the root image directory: " ).strip()
     path = Path( path_str )
 
     # Check that the root image directory path points to a valid directory.
     (valid, message) = File.check_valid_path( path )
     print( message )
+    logger.info( message )
     if valid:
 
         # Find all the files in the directory.
@@ -41,23 +54,28 @@ def main():
         file_paths = File.get_files( files_and_dirs )
         
         # Find all the image files in the set.
-        print( "Images are: ")
         image_paths = File.get_image_files( file_paths )
-        for image_path in image_paths: print( image_path.name )
+        print( f"Found {len(image_paths)} images." )
+        logger.info( "Images are: ")
+        for image_path in image_paths: logger.info( image_path.relative_to( path ) )
 
         # Find all the XMP files in the set.
-        print( "XMP files are: ")
         xmp_file_paths = File.get_xmp_files( file_paths )
-        for xmp_file_path in xmp_file_paths: print( xmp_file_path.name )
+        print( f"Found {len(xmp_file_paths)} xmp files." )
+        logger.info( "XMP files are: ")
+        for xmp_file_path in xmp_file_paths: logger.info( xmp_file_path.relative_to( path ) )
 
     cameras = Camera.get_all( r'./data/cameras.csv' )
-    # for camera in cameras: print( camera )
+    logger.info( "Cameras are: ")
+    for camera in cameras: logger.info( camera )
 
     owners = Owner.get_all( r'./data/owners.csv' )
-    # for owner in owners: print( owner )
+    logger.info( "Owners are: ")
+    for owner in owners: logger.info( owner )
 
     path_formats = PathFormat.get_all( r'./data/path_formats.csv' )
-    # for path_format in path_formats: print( path_format )
+    logger.info( "Path Formats are: ")
+    for path_format in path_formats: logger.info( path_format )
 
     # matching_pfs = [ pf
     #     for pf in path_formats 
