@@ -1,0 +1,20 @@
+﻿owner_name,image_capture_type,path_format
+Dad,Digital,{ict}\{directory}\{yyyy}\{yyyy-mm}\{yyyy-mm-dd}
+Dad,Film,{ict}\{directory}\*
+Mary,Digital,{ict}\{directory}\{yyyy}\{yyyy-mm}\{yyyy-mm-dd}
+Mary,Film,{ict}\{directory}\*
+Others,Digital,{ict}\{directory}\{yyyy}\{yyyy-mm}\{yyyy-mm-dd}
+Others (288 Group),Digital,{ict}\{directory}\{yyyy}\{yyyy-mm}\{yyyy-mm-dd}
+Others (Chris),Digital,{ict}\{directory}\{yyyy}\{yyyy-mm}\{yyyy-mm-dd}
+Others (Davy),Digital,{ict}\{directory}\{yyyy}\{yyyy-mm}\{yyyy-mm-dd}
+Others (ERS),Digital,{ict}\{directory}\{yyyy}\{yyyy-mm}\{yyyy-mm-dd}
+Others (Ian Connelly),Digital,{ict}\{directory}\{yyyy}\{yyyy-mm}\{yyyy-mm-dd}
+Others (Liz),Digital,{ict}\{directory}\{yyyy}\{yyyy-mm}\{yyyy-mm-dd}
+Others (Liz?),Digital,{ict}\{directory}\{yyyy}\{yyyy-mm}\{yyyy-mm-dd}
+Others (Lyrica),Digital,{ict}\{directory}\{yyyy}\{yyyy-mm}\{yyyy-mm-dd}
+Others (Piers),Digital,{ict}\{directory}\{yyyy}\{yyyy-mm}\{yyyy-mm-dd}
+Others (Powells),Digital,{ict}\{directory}\{yyyy}\{yyyy-mm}\{yyyy-mm-dd}
+Others (Sally Banks),Digital,{ict}\{directory}\{yyyy}\{yyyy-mm}\{yyyy-mm-dd}
+Us,Digital,{ict}\{directory}\{yyyy}\{yyyy-mm}
+Us (Aidan),Digital,{ict}\{directory}\{yyyy}\{yyyy-mm}
+Internet,Film,{ict}\{directory}\*
