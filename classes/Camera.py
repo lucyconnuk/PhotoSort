@@ -36,7 +36,7 @@ class Camera:
     def from_dict( cls, data: dict ) -> Camera:
 
         cls.validate_image_capture_type( data, "image_capture_type" )
-        cls.validate_owner( data, "owner" )
+        #cls.validate_owner( data, "owner" )
         cls.validate_int( data, "instance" )
         cls.validate_date( data, "from_date" )
         cls.validate_date( data, "to_date" )
@@ -66,6 +66,12 @@ class Camera:
         # See https://realpython.com/list-comprehension-python/ 
         return [ Camera.from_dict( record ) for record in cameras_ld ]
 
+    @staticmethod
+    def get_all( file_path: str ) -> list[Camera]:
+        camera_data_file = Path( file_path )
+        cameras_df = Camera.load_all( camera_data_file )
+        return Camera.dataframe_to_list( cameras_df )
+    
     @staticmethod
     def load_all( camera_data_file: Path ) -> pandas.DataFrame:
         """
@@ -108,7 +114,7 @@ class Camera:
         if data.get( field_name ) is not None:
             data[field_name] = int( data[field_name] )
 
-    @staticmethod
-    def validate_owner( data: dict, field_name: str ):
-        if data.get( field_name ):
-            data[field_name] = Owner( name=data[field_name].strip() )
+    # @staticmethod
+    # def validate_owner( data: dict, field_name: str ):
+    #     if data.get( field_name ):
+    #         data[field_name] = Owner( name=data[field_name].strip() )
