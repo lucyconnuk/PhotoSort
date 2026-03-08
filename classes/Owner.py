@@ -4,7 +4,9 @@ import pandas
 
 @dataclass(frozen=True)
 class Owner:
+    
     name: str
+    directory: str
 
     # Coding note: cls means "this class"
     # See https://realpython.com/ref/glossary/cls/
@@ -33,10 +35,16 @@ class Owner:
         return [ Owner.from_dict( record ) for record in owners_ld ]
 
     @staticmethod
+    def get_all( file_path: str ) -> list[Owner]:
+        owner_data_file = Path( file_path )
+        owners_df = Owner.load_all( owner_data_file )
+        return Owner.dataframe_to_list( owners_df )
+    
+    @staticmethod
     def load_all( owner_data_file: Path ) -> pandas.DataFrame:
         """
         Get all Owner data from csv file owner_data_file.
         """
         return pandas.read_csv( 
-            owner_data_file,
+            owner_data_file
         )
