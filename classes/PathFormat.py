@@ -1,14 +1,17 @@
-from classes.ImageCaptureType import ImageCaptureType
 from dataclasses import dataclass
 from pathlib import Path
+
 import pandas
+
+from classes.ImageCaptureType import ImageCaptureType
+
 
 @dataclass(frozen=True)
 class PathFormat:
     
     owner_name: str
     image_capture_type: ImageCaptureType
-    path_format: str
+    template: str
 
     # Coding note: cls means "this class"
     # See https://realpython.com/ref/glossary/cls/

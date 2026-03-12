@@ -1,4 +1,4 @@
-﻿owner_name,image_capture_type,path_format
+﻿owner_name,image_capture_type,template
 Dad,Digital,{ict}\{directory}\{yyyy}\{yyyy-mm}\{yyyy-mm-dd}
 Dad,Film,{ict}\{directory}\*
 Mary,Digital,{ict}\{directory}\{yyyy}\{yyyy-mm}\{yyyy-mm-dd}
