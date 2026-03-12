@@ -65,7 +65,12 @@ def main():
         for xmp_file_path in xmp_file_paths: logger.debug( xmp_file_path.relative_to( path ) )
 
         # Create Images from image Paths
-        images = [ Image( image_path ) for image_path in image_paths ]
+        images = []
+        for image_path in image_paths:
+            image = Image( image_path )
+            image.getMetadata()
+            images.append( image )
+        #images = [ Image( image_path ) for image_path in image_paths ]
         logger.info( f"Created {len(images)} Image objects." )
 
         # Get metadata for images
