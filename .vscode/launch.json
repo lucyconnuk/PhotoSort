@@ -1,0 +1,19 @@
+{
+    "configurations": [
+        {
+            "name": "Run PhotoSort on Digital/Mary/2006",
+            "type": "debugpy",
+            "request": "launch",
+            "console": "integratedTerminal",
+            "module": "photosort",
+            "args": [ "-p", "C:\\Users\\Public\\Pictures\\PhotoOrganizer\\Digital\\Mary\\2006" ],
+        },
+        {
+            "name": "Run PhotoSort without arguments",
+            "type": "debugpy",
+            "request": "launch",
+            "console": "integratedTerminal",
+            "module": "photosort",
+        },
+    ]
+}

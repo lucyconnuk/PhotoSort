@@ -32,7 +32,7 @@ def main():
 
     # Get arguments from the default values, the command line, or the user.
     args = get_command_line_args()
-    logger.debug( f"Args are: {args}" )
+    logger.info( f"Args are: {args}" )
     path_str = args.path if args.path else input( "Enter path to the root image directory: " ).strip()
     path = Path( path_str )
 
@@ -58,11 +58,11 @@ def main():
         logger.debug( "Images are: ")
         for image_path in image_paths: logger.debug( image_path.relative_to( path ) )
 
-        # Find all the XMP files in the set.
-        xmp_file_paths = File.get_xmp_files( file_paths )
-        logger.info( f"Found {len(xmp_file_paths)} xmp files." )
-        logger.debug( "XMP files are: ")
-        for xmp_file_path in xmp_file_paths: logger.debug( xmp_file_path.relative_to( path ) )
+        # # Find all the XMP files in the set.
+        # xmp_file_paths = File.get_xmp_files( file_paths )
+        # logger.info( f"Found {len(xmp_file_paths)} xmp files." )
+        # logger.debug( "XMP files are: ")
+        # for xmp_file_path in xmp_file_paths: logger.debug( xmp_file_path.relative_to( path ) )
 
         # Create Images from image Paths
         images = []
@@ -79,17 +79,6 @@ def main():
 
     else:
         logger.warning( message )
-
-    # matching_pfs = [ pf
-    #     for pf in path_formats 
-    #     if pf.owner_name == "Mary"
-    #     and pf.image_capture_type == ImageCaptureType.Film.value
-    # ]
-    # print("***************************************")
-    # for matching_pf in matching_pfs: print( matching_pf )
-
-
-
 
 if __name__ == "__main__":
     main()

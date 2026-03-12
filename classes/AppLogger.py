@@ -24,7 +24,7 @@ class AppLogger:
         start_time_text = start_time.strftime("%Y%m%dT%H%M%S")
         logging.basicConfig( 
             filename = fr'logs\photosort-{start_time_text}.log', 
-            level = logging.DEBUG,
+            level = logging.INFO,
             format = '%(asctime)s %(levelname)s: %(message)s',
             datefmt = '%Y-%m-%d %H:%M:%S'
         )
