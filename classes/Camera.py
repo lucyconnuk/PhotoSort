@@ -1,10 +1,12 @@
-from classes.ImageCaptureType import ImageCaptureType
-from classes.Owner import Owner
 from dataclasses import dataclass
 from datetime import date
-from typing import Optional
 from pathlib import Path
+from typing import Optional
+
 import pandas
+
+from classes.ImageCaptureType import ImageCaptureType
+from classes.Owner import Owner
 
 DATA_FILE_DATE_COLUMNS = [ "to_date", "from_date" ]
 DATA_FILE_DATE_FORMAT = "yyyy-MM-dd"
@@ -33,10 +35,10 @@ class Camera:
     # Coding note: cls means "this class"
     # See https://realpython.com/ref/glossary/cls/
     @classmethod
-    def from_dict( cls, data: dict ) -> Camera:
+    def from_dict( cls, data: dict, owners: list[Owner] ) -> Camera:
 
         cls.validate_image_capture_type( data, "image_capture_type" )
-        #cls.validate_owner( data, "owner" )
+        cls.validate_owner( data, "owner", owners )
         cls.validate_int( data, "instance" )
         cls.validate_date( data, "from_date" )
         cls.validate_date( data, "to_date" )
@@ -47,7 +49,7 @@ class Camera:
         return cls(**data)
 
     @staticmethod
-    def dataframe_to_list( cameras_df: pandas.DataFrame ) -> list[Camera]:
+    def dataframe_to_list( cameras_df: pandas.DataFrame, owners: list[Owner] ) -> list[Camera]:
         """
         Convert Camera data from dataframe to list of Cameras.
         """
@@ -64,13 +66,13 @@ class Camera:
         # Convert list of records into list of Camera objects, using a list comprehension,
         # and return the list.
         # See https://realpython.com/list-comprehension-python/ 
-        return [ Camera.from_dict( record ) for record in cameras_ld ]
+        return [ Camera.from_dict( record, owners ) for record in cameras_ld ]
 
     @staticmethod
-    def get_all( file_path: str ) -> list[Camera]:
+    def get_all( file_path: str, owners: list[Owner] ) -> list[Camera]:
         camera_data_file = Path( file_path )
         cameras_df = Camera.load_all( camera_data_file )
-        return Camera.dataframe_to_list( cameras_df )
+        return Camera.dataframe_to_list( cameras_df, owners )
     
     @staticmethod
     def load_all( camera_data_file: Path ) -> pandas.DataFrame:
@@ -114,7 +116,7 @@ class Camera:
         if data.get( field_name ) is not None:
             data[field_name] = int( data[field_name] )
 
-    # @staticmethod
-    # def validate_owner( data: dict, field_name: str ):
-    #     if data.get( field_name ):
-    #         data[field_name] = Owner( name=data[field_name].strip() )
+    @staticmethod
+    def validate_owner( data: dict, field_name: str, owners: list[Owner] ):
+        if data.get( field_name ):
+            data[field_name] = [ owner for owner in owners if owner.name == data[field_name].strip() ][0]

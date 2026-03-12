@@ -1,15 +1,10 @@
 import argparse
-from classes.Camera import Camera
-from classes.File import File
-from classes.Image import Image
-#from classes.ImageCaptureType import ImageCaptureType
-from classes.Owner import Owner
-from classes.PathFormat import PathFormat
-import datetime
-import logging
 from pathlib import Path
 
-logger = logging.getLogger(__name__)
+from classes.AppConfig import appConfig
+from classes.AppLogger import AppLogger, logger
+from classes.File import File
+from classes.Image import Image
 
 # TODO:
 # - develop main
@@ -28,33 +23,12 @@ def get_command_line_args():
     )
     return parser.parse_args()
 
-def setup_logging_to_console():
-    console = logging.StreamHandler()
-    console.setLevel( logging.INFO )
-    # set a format which is simpler for console use
-    formatter = logging.Formatter( '%(levelname)-8s: %(message)s' )
-    # tell the handler to use this format
-    console.setFormatter( formatter )
-    # add the handler to the root logger
-    logger.addHandler( console )
-
-def setup_logging_to_file():
-    # Define handler which writes INFO messages or higher to the console.
-    # See https://docs.python.org/3/howto/logging-cookbook.html#logging-to-multiple-destinations
-    start_time = datetime.datetime.now()
-    start_time_text = start_time.strftime("%Y%m%dT%H%M%S")
-    logging.basicConfig( 
-        filename = fr'logs\photosort-{start_time_text}.log', 
-        level = logging.DEBUG,
-        format = '%(asctime)s %(levelname)s: %(message)s',
-        datefmt = '%Y-%m-%d %H:%M:%S'
-    )
 
 def main():
 
     # Setup logging
-    setup_logging_to_file()
-    setup_logging_to_console()
+    AppLogger.setup_logging_to_file()
+    AppLogger.setup_logging_to_console()
 
     # Get arguments from the default values, the command line, or the user.
     args = get_command_line_args()
@@ -66,6 +40,13 @@ def main():
     (valid, message) = File.check_valid_path( path )
     if valid:
         logger.info( message )
+
+        logger.debug( "Cameras are: ")
+        for camera in appConfig.cameras: logger.debug( camera )
+        logger.debug( "Owners are: ")
+        for owner in appConfig.owners: logger.debug( owner )
+        logger.debug( "Path Formats are: ")
+        for path_format in appConfig.path_formats: logger.debug( path_format )
 
         # Find all the files in the directory.
         files_and_dirs = path.rglob("*")
@@ -86,20 +67,13 @@ def main():
         # Create Images from image Paths
         images = [ Image( image_path ) for image_path in image_paths ]
         logger.info( f"Created {len(images)} Image objects." )
+
+        # Get metadata for images
+        image = images[0]
+        logger.info ( image )
+
     else:
         logger.warning( message )
-
-    cameras = Camera.get_all( r'./data/cameras.csv' )
-    logger.debug( "Cameras are: ")
-    for camera in cameras: logger.debug( camera )
-
-    owners = Owner.get_all( r'./data/owners.csv' )
-    logger.debug( "Owners are: ")
-    for owner in owners: logger.debug( owner )
-
-    path_formats = PathFormat.get_all( r'./data/path_formats.csv' )
-    logger.debug( "Path Formats are: ")
-    for path_format in path_formats: logger.debug( path_format )
 
     # matching_pfs = [ pf
     #     for pf in path_formats 
@@ -110,13 +84,6 @@ def main():
     # for matching_pf in matching_pfs: print( matching_pf )
 
 
-    # image = new Image(...);
-    # camera = image.get_camera( cameras )
-    # owner = camera.Owner
-    # image.Owner = camera.Owner
-    # image.Initialcapture = camera.InitialCapture
-    # image.actual_path # where file is now
-    # image.expected_path # where file should be - depends on image_capture_type, owner and date_taken
 
 
 if __name__ == "__main__":
