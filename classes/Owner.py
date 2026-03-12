@@ -1,6 +1,8 @@
 from dataclasses import dataclass
 from pathlib import Path
+
 import pandas
+
 
 @dataclass(frozen=True)
 class Owner:
