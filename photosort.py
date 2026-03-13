@@ -2,7 +2,7 @@ import argparse
 from pathlib import Path
 
 from classes.AppConfig import appConfig
-from classes.AppLogger import AppLogger, logger
+from classes.AppLogger import logger
 from classes.File import File
 from classes.Image import Image
 
@@ -25,10 +25,6 @@ def get_command_line_args():
 
 
 def main():
-
-    # Setup logging
-    AppLogger.setup_logging_to_file()
-    AppLogger.setup_logging_to_console()
 
     # Get arguments from the default values, the command line, or the user.
     args = get_command_line_args()

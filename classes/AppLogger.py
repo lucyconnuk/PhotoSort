@@ -7,6 +7,7 @@ from datetime import datetime
 @dataclass( frozen=False, slots=True )
 class AppLogger:
 
+    @staticmethod
     def setup_logging_to_console():
         console = logging.StreamHandler()
         console.setLevel( logging.DEBUG )
@@ -17,6 +18,7 @@ class AppLogger:
         # add the handler to the root logger
         logger.addHandler( console )
 
+    @staticmethod
     def setup_logging_to_file():
         # Define handler which writes INFO messages or higher to the console.
         # See https://docs.python.org/3/howto/logging-cookbook.html#logging-to-multiple-destinations
@@ -28,6 +30,8 @@ class AppLogger:
             format = '%(asctime)s %(levelname)s: %(message)s',
             datefmt = '%Y-%m-%d %H:%M:%S'
         )
-
-# Create singleton instance of logging.Logger
+        
+# Create instance of logging.Logger
 logger = logging.getLogger(__name__)
+AppLogger.setup_logging_to_file()
+AppLogger.setup_logging_to_console()
