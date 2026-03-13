@@ -64,7 +64,7 @@ def main():
         images = []
         for image_path in image_paths:
             image = Image( image_path )
-            image.getMetadata()
+            image.get_metadata()
             images.append( image )
         #images = [ Image( image_path ) for image_path in image_paths ]
         logger.info( f"Created {len(images)} Image objects." )
