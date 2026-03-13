@@ -28,7 +28,7 @@ class AppLogger:
             filename = fr'logs\photosort-{start_time_text}.log', 
             level = logging.INFO,
             format = '%(asctime)s %(levelname)s: %(message)s',
-            datefmt = '%Y-%m-%d %H:%M:%S'
+            datefmt = '%y-%m-%d %H:%M:%S'
         )
         
 # Create instance of logging.Logger

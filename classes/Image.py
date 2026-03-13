@@ -60,6 +60,7 @@ class Image:
             ]
         return possible_path_formats
 
+    # TODO rename
     def get_metadata(self):
 
         # Get image metadata from image file
@@ -75,8 +76,8 @@ class Image:
             self.camera = possible_cameras[0]
 
         ## Get path_format from owner and initial_capture_type
+        path_format = None
         if self.camera and self.camera.owner and self.camera.image_capture_type:
-            path_format = ""
             possible_pfs = self.get_matching_path_formats( appConfig.path_formats )
 
             # If there is more or less than 1, log a warning
@@ -87,5 +88,6 @@ class Image:
                 path_format = possible_pfs[0]
 
         # Get image_expected_path from path_format and data
-        self.expected_path = self.get_expected_path( path_format )
+        if( path_format ):
+            self.expected_path = self.get_expected_path( path_format )
         

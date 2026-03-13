@@ -107,7 +107,6 @@ test_get_matching_cameras_data = [
 
 ]
 
-# Test get_matching_cameras for Image.metadata = None and cameras = []
 @pytest.mark.parametrize( "args, expected", test_get_matching_cameras_data )
 def test_get_matching_cameras( args, expected ):
     assert args[0].get_matching_cameras( args[1] ) == expected
