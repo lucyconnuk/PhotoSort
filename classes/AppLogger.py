@@ -31,7 +31,7 @@ class AppLogger:
             datefmt = '%y-%m-%d %H:%M:%S'
         )
         
-# Create instance of logging.Logger
+# Create singleton instance of logging.Logger
 logger = logging.getLogger(__name__)
 AppLogger.setup_logging_to_file()
 AppLogger.setup_logging_to_console()

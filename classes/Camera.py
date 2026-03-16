@@ -22,7 +22,7 @@ class Camera:
     A physical device which captures Images. 
     Image Capture Type can be straight to Digital, or scanned from Film.
     Identifiable by its Make and Model, and if necessary an Instance no.
-    Has an Owner and optional usage To and From Dates.
+    Has an Owner and optional usage From and To Dates.
     """
     make: str
     model: str
@@ -36,6 +36,9 @@ class Camera:
     # See https://realpython.com/ref/glossary/cls/
     @classmethod
     def from_dict( cls, data: dict, owners: list[Owner] ) -> Camera:
+        """
+        Create Camera from dictionary of values
+        """
 
         cls.validate_image_capture_type( data, "image_capture_type" )
         cls.validate_owner( data, "owner", owners )
@@ -70,6 +73,9 @@ class Camera:
 
     @staticmethod
     def get_all( file_path: str, owners: list[Owner] ) -> list[Camera]:
+        """
+        Given a path to a csv file containing Camera data, return a list of Cameras.
+        """
         camera_data_file = Path( file_path )
         cameras_df = Camera.load_all( camera_data_file )
         return Camera.dataframe_to_list( cameras_df, owners )
@@ -77,7 +83,7 @@ class Camera:
     @staticmethod
     def load_all( camera_data_file: Path ) -> pandas.DataFrame:
         """
-        Get all Camera data from csv file camera_data_file.
+        Get Camera data from csv file.
         """
         return pandas.read_csv( 
             camera_data_file,

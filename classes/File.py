@@ -3,8 +3,13 @@ from pathlib import Path
 
 IMAGE_EXTENSIONS = {'.jpg', '.jpeg', '.png', '.gif', '.bmp', '.tiff', '.webp'}
 
+# For additional coding notes, see Camera.py
 @dataclass( frozen=True, slots=True )
 class File:
+    """
+    A file object. Has a Path.
+    """
+    
     file_path: Path
 
     @staticmethod
