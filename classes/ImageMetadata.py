@@ -26,9 +26,9 @@ class ImageMetadata:
         image_metadata = piexif.load( str( image_path ), True )
 
         # Get camera make and model and date image taken from the metadata.
-        make = cls.get_string( image_metadata, SECTION, MAKE_KEY )
-        model = cls.get_string( image_metadata, SECTION, MODEL_KEY )
-        date = cls.get_date( cls.get_string( image_metadata, SECTION, DATETIME_KEY ) )
+        make = ImageMetadata.get_string( image_metadata, SECTION, MAKE_KEY )
+        model = ImageMetadata.get_string( image_metadata, SECTION, MODEL_KEY )
+        date = ImageMetadata.get_date( cls.get_string( image_metadata, SECTION, DATETIME_KEY ) )
 
         # Call the class constructor with this data.
         return cls( make, model, date )

@@ -32,22 +32,23 @@ class Camera:
     from_date: Optional[date] = None
     to_date: Optional[date] = None
 
-    # Coding note: cls means "this class"
-    # See https://realpython.com/ref/glossary/cls/
+    # Coding notes: 
+    # @classmethod - See https://stackoverflow.com/questions/12179271/meaning-of-classmethod-and-staticmethod-for-a-beginner 
+    # cls means "this class" - See https://realpython.com/ref/glossary/cls/
     @classmethod
     def from_dict( cls, data: dict, owners: list[Owner] ) -> Camera:
         """
         Create Camera from dictionary of values
         """
 
-        cls.validate_image_capture_type( data, "image_capture_type" )
-        cls.validate_owner( data, "owner", owners )
-        cls.validate_int( data, "instance" )
-        cls.validate_date( data, "from_date" )
-        cls.validate_date( data, "to_date" )
+        Camera.validate_image_capture_type( data, "image_capture_type" )
+        Camera.validate_owner( data, "owner", owners )
+        Camera.validate_int( data, "instance" )
+        Camera.validate_date( data, "from_date" )
+        Camera.validate_date( data, "to_date" )
 
         # Coding note: **data means "all the values in data"
-        # So here we are passing all the values in the data dict to the cls() method
+        # So here we are passing ALL of the values in the data dict, including the ones we've just validated, to the cls() method
         # and returning the return value.
         return cls(**data)
 
