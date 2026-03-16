@@ -1,10 +1,13 @@
+
 import pytest
 
+from classes.Owner import Owner
 
 
-@pytest.mark.skip("Not written")
 def test_from_dict():
-    pass
+    result = Owner.from_dict( { "name": "Alice", "directory": "AlicePics" } )
+    assert result.name == "Alice"
+    assert result.directory == "AlicePics"
 
 @pytest.mark.skip("Not written")
 def test_dataframe_to_list():
