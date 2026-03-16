@@ -6,6 +6,9 @@ from datetime import datetime
 
 @dataclass( frozen=False, slots=True )
 class AppLogger:
+    """
+    Used to set up a singleton instance of logging.Logger.
+    """
 
     @staticmethod
     def setup_logging_to_console():

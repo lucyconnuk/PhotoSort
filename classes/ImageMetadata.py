@@ -14,6 +14,10 @@ DATE_FORMAT = "%Y:%m:%d %H:%M:%S"
 
 @dataclass( frozen=False, slots=True )
 class ImageMetadata:
+    """
+    (Some of) the metadata associated with an image. 
+    The only metadata we are interested in here is camera make and model and date taken.
+    """
 
     camera_make: Optional[str] = None
     camera_model: Optional[str] = None
