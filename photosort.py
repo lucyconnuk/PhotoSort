@@ -60,18 +60,15 @@ def main():
         # logger.debug( "XMP files are: ")
         # for xmp_file_path in xmp_file_paths: logger.debug( xmp_file_path.relative_to( path ) )
 
-        # Create Images from image Paths
+        # Create Images, with their metadata, from image Paths
         images = []
         for image_path in image_paths:
             image = Image( image_path )
             image.get_metadata()
             images.append( image )
-        #images = [ Image( image_path ) for image_path in image_paths ]
-        logger.info( f"Created {len(images)} Image objects." )
 
-        # Get metadata for images
-        image = images[0]
-        logger.info ( image )
+        logger.info( f"Created {len(images)} Image objects." )
+        logger.info ( images[0] )
 
     else:
         logger.warning( message )
