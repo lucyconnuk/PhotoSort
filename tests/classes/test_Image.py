@@ -5,6 +5,7 @@ import pytest
 from classes.Camera import Camera
 from classes.Image import Image
 from classes.ImageCaptureType import ImageCaptureType
+from classes.ImageFile import ImageFile
 from classes.ImageMetadata import ImageMetadata
 from classes.Owner import Owner
 
@@ -51,18 +52,18 @@ camera_list = [
 ## Images used in tests
 
 i_no_metadata =     Image()
-i_no_camera_make =  Image( metadata = ImageMetadata( None, "b", datetime( 2001, 1, 1 ) ) )
-i_no_camera_model = Image( metadata = ImageMetadata( "a", None, datetime( 2001, 1, 1 ) ) )
-i_no_date_taken =   Image( metadata = ImageMetadata( "a", "b", None ) )
-i_all_metadata =    Image( metadata = ImageMetadata( "a", "b", datetime( 2001, 1, 1 ) ) )
+i_no_camera_make =  Image( ImageFile( metadata = ImageMetadata( None, "b", datetime( 2001, 1, 1 ) ) ) )
+i_no_camera_model = Image( ImageFile( metadata = ImageMetadata( "a", None, datetime( 2001, 1, 1 ) ) ) )
+i_no_date_taken =   Image( ImageFile( metadata = ImageMetadata( "a", "b", None ) ) )
+i_all_metadata =    Image( ImageFile( metadata = ImageMetadata( "a", "b", datetime( 2001, 1, 1 ) ) ) )
 
-i_canon100 = Image( metadata = ImageMetadata( "Canon", "100", None ) )
-i_nikon2 = Image( metadata = ImageMetadata( "Nikon", "2", None ) )
-i_canon300 = Image( metadata = ImageMetadata( "Canon", "300", None ) )
-i_nikon4_noughties = Image( metadata = ImageMetadata( "Nikon", "4", datetime( 2001, 1, 1 ) ) )
-i_canon500_teens = Image( metadata = ImageMetadata( "Canon", "500", datetime( 2011, 1, 1 ) ) )
-i_canon500_twenties = Image( metadata = ImageMetadata( "Canon", "500", datetime( 2021, 1, 1 ) ) )
-i_filmscan6 = Image( metadata = ImageMetadata( "FilmScan", "6", None ) )
+i_canon100 = Image( ImageFile( metadata = ImageMetadata( "Canon", "100", None ) ) )
+i_nikon2 = Image( ImageFile( metadata = ImageMetadata( "Nikon", "2", None ) ) )
+i_canon300 = Image( ImageFile( metadata = ImageMetadata( "Canon", "300", None ) ) )
+i_nikon4_noughties = Image( ImageFile( metadata = ImageMetadata( "Nikon", "4", datetime( 2001, 1, 1 ) ) ) )
+i_canon500_teens = Image( ImageFile( metadata = ImageMetadata( "Canon", "500", datetime( 2011, 1, 1 ) ) ) )
+i_canon500_twenties = Image( ImageFile( metadata = ImageMetadata( "Canon", "500", datetime( 2021, 1, 1 ) ) ) )
+i_filmscan6 = Image( ImageFile( metadata = ImageMetadata( "FilmScan", "6", None ) ) )
 
 test_get_matching_cameras_data = [
 

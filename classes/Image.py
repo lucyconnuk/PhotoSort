@@ -6,45 +6,44 @@ from typing import Optional
 from classes.AppConfig import appConfig
 from classes.AppLogger import logger
 from classes.Camera import Camera
-from classes.ImageMetadata import ImageMetadata
+from classes.ImageFile import ImageFile
 from classes.PathFormat import PathFormat
 
 
 @dataclass( frozen=False, slots=True )
 class Image:
     
-    path: Optional[Path] = None
-    metadata: Optional[ImageMetadata] = None
+    image_file: Optional[ImageFile] = None
     camera: Optional[Camera] = None
     expected_path: Optional[Path] = None
     #sidecar_filename: Optional[Path] = None
 
     def get_expected_path( cls, path_format: PathFormat) -> Path:
         path = ""
-        if path_format != "" and cls.camera.image_capture_type and cls.camera.owner and cls.metadata.date_taken:
+        if path_format != "" and cls.camera.image_capture_type and cls.camera.owner and cls.image_file.metadata.date_taken:
             path = path_format.template
             path = path.replace( r"\{ict\}", cls.camera.image_capture_type.value )
             path = path.replace( r"\{directory\}", cls.camera.owner.directory )
-            path = path.replace( r"\{yyyy\}", datetime.strftime( cls.metadata.date_taken, "%Y" ) )
-            path = path.replace( r"\{mm\}", datetime.strftime( cls.metadata.date_taken, "%m" ) )
-            path = path.replace( r"\{dd\}", datetime.strftime( cls.metadata.date_taken, "%d" ) )
+            path = path.replace( r"\{yyyy\}", datetime.strftime( cls.image_file.metadata.date_taken, "%Y" ) )
+            path = path.replace( r"\{mm\}", datetime.strftime( cls.image_file.metadata.date_taken, "%m" ) )
+            path = path.replace( r"\{dd\}", datetime.strftime( cls.image_file.metadata.date_taken, "%d" ) )
         return Path( path )
 
     def get_matching_cameras( cls, cameras: list[Camera] ) -> list[Camera]:
         possible_cameras = []
-        if( cls.metadata ):
+        if( cls.image_file and cls.image_file.metadata ):
             # Filter by make and model
             possible_cameras = [ 
                 camera for camera in cameras
-                if camera.make == cls.metadata.camera_make 
-                and camera.model == cls.metadata.camera_model
+                if camera.make == cls.image_file.metadata.camera_make 
+                and camera.model == cls.image_file.metadata.camera_model
             ]
             # If this gives more than 1 possible camera, filter by date taken
-            if len(possible_cameras) > 1 and cls.metadata.date_taken != None:
+            if len(possible_cameras) > 1 and cls.image_file.metadata.date_taken != None:
                 possible_cameras = [ 
                     camera for camera in possible_cameras
-                    if camera.from_date <= cls.metadata.date_taken
-                    and camera.to_date >= cls.metadata.date_taken
+                    if camera.from_date <= cls.image_file.metadata.date_taken
+                    and camera.to_date >= cls.image_file.metadata.date_taken
                 ]
         return possible_cameras
 
@@ -63,14 +62,14 @@ class Image:
     # TODO rename
     def get_metadata(self):
 
-        # Get image metadata from image file
-        self.metadata = ImageMetadata().from_path( self.path )
+        ## Get metadata
+        self.image_file.get_metadata()
 
-        # Get camera from image metadata for camera_make, camera_model and date_taken
+        # Get camera from image_file metadata for camera_make, camera_model and date_taken
         possible_cameras = self.get_matching_cameras( appConfig.cameras )
         # If there is more or less than 1, log a warning
         if len(possible_cameras) != 1:
-            logger.warning( f"Found {len(possible_cameras)} possible cameras for {self.metadata.camera_make} {self.metadata.camera_model} {self.metadata.date_taken}")
+            logger.warning( f"Found {len(possible_cameras)} possible cameras for {self.image_file.metadata.camera_make} {self.image_file.metadata.camera_model} {self.image_file.metadata.date_taken}")
         # Else set camera to this one
         else:
             self.camera = possible_cameras[0]

@@ -5,6 +5,7 @@ from classes.AppConfig import appConfig
 from classes.AppLogger import logger
 from classes.File import File
 from classes.Image import Image
+from classes.ImageFile import ImageFile
 
 # TODO:
 # - develop main
@@ -63,7 +64,7 @@ def main():
         # Create Images, with their metadata, from image Paths
         images = []
         for image_path in image_paths:
-            image = Image( image_path )
+            image = Image( ImageFile( image_path ) )
             image.get_metadata()
             images.append( image )
 
