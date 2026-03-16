@@ -18,52 +18,44 @@ class Image:
     expected_path: Optional[Path] = None
     #sidecar_filename: Optional[Path] = None
 
-    def get_expected_path( cls, path_format: PathFormat) -> Path:
+    ### NEEDS WORKING ON ###
+    # instance method
+    def get_expected_path( self, path_format: PathFormat) -> Path:
         path = ""
-        if path_format != "" and cls.camera.image_capture_type and cls.camera.owner and cls.image_file.metadata.date_taken:
+        if path_format != "" and self.camera.image_capture_type and self.camera.owner and self.image_file.metadata.date_taken:
             path = path_format.template
-            path = path.replace( r"\{ict\}", cls.camera.image_capture_type.value )
-            path = path.replace( r"\{directory\}", cls.camera.owner.directory )
-            path = path.replace( r"\{yyyy\}", datetime.strftime( cls.image_file.metadata.date_taken, "%Y" ) )
-            path = path.replace( r"\{mm\}", datetime.strftime( cls.image_file.metadata.date_taken, "%m" ) )
-            path = path.replace( r"\{dd\}", datetime.strftime( cls.image_file.metadata.date_taken, "%d" ) )
+            path = path.replace( r"\{ict\}", self.camera.image_capture_type.value )
+            path = path.replace( r"\{directory\}", self.camera.owner.directory )
+            path = path.replace( r"\{yyyy\}", datetime.strftime( self.image_file.metadata.date_taken, "%Y" ) )
+            path = path.replace( r"\{mm\}", datetime.strftime( self.image_file.metadata.date_taken, "%m" ) )
+            path = path.replace( r"\{dd\}", datetime.strftime( self.image_file.metadata.date_taken, "%d" ) )
         return Path( path )
 
-    def get_matching_cameras( cls, cameras: list[Camera] ) -> list[Camera]:
+    # instance method
+    def get_matching_cameras( self, cameras: list[Camera] ) -> list[Camera]:
         possible_cameras = []
-        if( cls.image_file and cls.image_file.metadata ):
+        if( self.image_file and self.image_file.metadata ):
             # Filter by make and model
             possible_cameras = [ 
                 camera for camera in cameras
-                if camera.make == cls.image_file.metadata.camera_make 
-                and camera.model == cls.image_file.metadata.camera_model
+                if camera.make == self.image_file.metadata.camera_make 
+                and camera.model == self.image_file.metadata.camera_model
             ]
             # If this gives more than 1 possible camera, filter by date taken
-            if len(possible_cameras) > 1 and cls.image_file.metadata.date_taken != None:
+            if len(possible_cameras) > 1 and self.image_file.metadata.date_taken != None:
                 possible_cameras = [ 
                     camera for camera in possible_cameras
-                    if camera.from_date <= cls.image_file.metadata.date_taken
-                    and camera.to_date >= cls.image_file.metadata.date_taken
+                    if camera.from_date <= self.image_file.metadata.date_taken
+                    and camera.to_date >= self.image_file.metadata.date_taken
                 ]
         return possible_cameras
 
-    ### TODO: Move this to Camera?
-    def get_matching_path_formats( cls, path_formats: list[PathFormat] ) -> list[PathFormat]:
-        possible_path_formats = []
-        if( cls.camera ):
-            # Filter by owner and image_capture_type
-            possible_path_formats = [ 
-                pf for pf in path_formats
-                if pf.owner_name == cls.camera.owner.name
-                and pf.image_capture_type == cls.camera.image_capture_type
-            ]
-        return possible_path_formats
-
     # TODO rename
+    # instance method
     def get_metadata(self):
 
         ## Get metadata
-        self.image_file.get_metadata()
+        self.image_file.set_metadata()
 
         # Get camera from image_file metadata for camera_make, camera_model and date_taken
         possible_cameras = self.get_matching_cameras( appConfig.cameras )
@@ -77,7 +69,7 @@ class Image:
         ## Get path_format from owner and initial_capture_type
         path_format = None
         if self.camera and self.camera.owner and self.camera.image_capture_type:
-            possible_pfs = self.get_matching_path_formats( appConfig.path_formats )
+            possible_pfs = self.camera.get_matching_path_formats( appConfig.path_formats )
 
             # If there is more or less than 1, log a warning
             if len(possible_pfs) != 1:

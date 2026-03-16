@@ -7,6 +7,7 @@ import pandas
 
 from classes.ImageCaptureType import ImageCaptureType
 from classes.Owner import Owner
+from classes.PathFormat import PathFormat
 
 DATA_FILE_DATE_COLUMNS = [ "to_date", "from_date" ]
 DATA_FILE_DATE_FORMAT = "yyyy-MM-dd"
@@ -51,6 +52,17 @@ class Camera:
         # So here we are passing ALL of the values in the data dict, including the ones we've just validated, to the cls() method
         # and returning the return value.
         return cls(**data)
+
+    # instance method
+    def get_matching_path_formats( self, path_formats: list[PathFormat] ) -> list[PathFormat]:
+        possible_path_formats = []
+        # Filter by owner and image_capture_type
+        possible_path_formats = [ 
+            pf for pf in path_formats
+            if pf.owner_name == self.owner.name
+            and pf.image_capture_type == self.image_capture_type
+        ]
+        return possible_path_formats
 
     @staticmethod
     def dataframe_to_list( cameras_df: pandas.DataFrame, owners: list[Owner] ) -> list[Camera]:

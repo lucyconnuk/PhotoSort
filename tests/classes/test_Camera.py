@@ -3,11 +3,20 @@ from datetime import date
 import pytest
 
 from classes.Camera import Camera
+from tests.data.TestData import TestData
 
 
 @pytest.mark.skip("Not written")
 def test_from_dict():
     pass
+
+test_get_matching_path_formats_data = [
+    ( [ TestData.c_canon100, TestData.pf_list ], [ TestData.pf_canon100 ] ),
+]
+
+@pytest.mark.parametrize( "args, expected", test_get_matching_path_formats_data )
+def test_get_matching_path_formats( args, expected ):
+    assert args[0].get_matching_path_formats( args[1] ) == expected
 
 @pytest.mark.skip("Not written")
 def test_dataframe_to_list():
