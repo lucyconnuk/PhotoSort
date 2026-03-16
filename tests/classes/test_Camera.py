@@ -1,6 +1,9 @@
-from classes.Camera import Camera
 from datetime import date
+
 import pytest
+
+from classes.Camera import Camera
+
 
 @pytest.mark.skip("Not written")
 def test_from_dict():
@@ -12,6 +15,10 @@ def test_dataframe_to_list():
 
 @pytest.mark.skip("Not written")
 def test_load_all():
+    pass
+
+@pytest.mark.skip("Not written")
+def test_get_all():
     pass
 
 test_parse_date_data = [

@@ -1,8 +1,36 @@
 from datetime import datetime
 
+import piexif
 import pytest
 
 from classes.ImageMetadata import ImageMetadata
+
+
+def test_from_path(mocker):
+
+    # Create mock metadata to return from piexif.load()
+    metadata_0th = [None] * 307
+    metadata_0th[271] = b"Canon"
+    metadata_0th[272] = b"EOS Rebel T6"
+    metadata_0th[306] = b"2021:02:03 04:05:06"
+    metadata = {
+        "0th": metadata_0th
+    }
+
+    # Patch piexif.load() to return the mock metadata
+    mocker.patch( "piexif.load", return_value = metadata )
+
+    # Call the function under test with a dummy path
+    im = ImageMetadata()
+    result = im.from_path( "dummy" )
+
+    # Check that piexif.load() was called once with the dummy path
+    piexif.load.assert_called_once_with( "dummy" )
+
+    # Check that it returned the correct result
+    assert result.camera_make == "Canon"
+    assert result.camera_model == "EOS Rebel T6"
+    assert result.date_taken == datetime( 2021, 2, 3, 4, 5, 6 )
 
 im_not_dict =                   ""
 im_empty_dict =                 dict()
