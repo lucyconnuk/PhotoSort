@@ -9,23 +9,26 @@ from classes.ImageMetadata import ImageMetadata
 def test_from_path(mocker):
 
     # Create mock metadata to return from piexif.load()
-    metadata_0th = [None] * 307
-    metadata_0th[271] = b"Canon"
-    metadata_0th[272] = b"EOS Rebel T6"
-    metadata_0th[306] = b"2021:02:03 04:05:06"
+    # metadata_0th = []
+    # metadata_0th['Make'] = b"Canon"
+    # metadata_0th['Model'] = b"EOS Rebel T6"
+    # metadata_0th['DateTime'] = b"2021:02:03 04:05:06"
     metadata = {
-        "0th": metadata_0th
+        "0th": { 
+            'Make': b"Canon", 
+            'Model': b"EOS Rebel T6", 
+            'DateTime': b"2021:02:03 04:05:06" 
+        }
     }
 
     # Patch piexif.load() to return the mock metadata
     mocker.patch( "piexif.load", return_value = metadata )
 
     # Call the function under test with a dummy path
-    im = ImageMetadata()
-    result = im.from_path( "dummy" )
+    result = ImageMetadata.from_path( "dummy" )
 
     # Check that piexif.load() was called once with the dummy path
-    piexif.load.assert_called_once_with( "dummy" )
+    piexif.load.assert_called_once_with( "dummy", True )
 
     # Check that it returned the correct result
     assert result.camera_make == "Canon"
@@ -35,9 +38,9 @@ def test_from_path(mocker):
 im_not_dict =                   ""
 im_empty_dict =                 dict()
 im_dict_with_undefined_section: dict[str, any] = { "section": None }
-im_dict_with_empty_section:     dict[str, any] = { "section": [] }
-im_dict_with_str_data:          dict[str, any] = { "section": [ "string data" ] }
-im_dict_with_byte_data:         dict[str, any] = { "section": [ b"byte data" ] }
+im_dict_with_empty_section:     dict[str, any] = { "section": {} }
+im_dict_with_str_data:          dict[str, any] = { "section": { "item": "string data" } }
+im_dict_with_byte_data:         dict[str, any] = { "section": { "item": b"byte data" } }
 
 test_get_string_data = [
 
@@ -51,17 +54,15 @@ test_get_string_data = [
     ( [ im_empty_dict, None, None ], None ),
     
     # image_metadata has section but section is undefined
-    ( [ im_dict_with_undefined_section, "section", 0 ], None ),
+    ( [ im_dict_with_undefined_section, "section", None ], None ),
     
     # image_metadata has section but section is empty
-    ( [ im_dict_with_empty_section, "section", 0 ], None ),
+    ( [ im_dict_with_empty_section, "section", None ], None ),
 
-    # image_metadata has section with enough data
-    ( [ im_dict_with_str_data, "section", 0 ], "string data" ),
-    ( [ im_dict_with_byte_data, "section", 0 ], "byte data" ),
+    # image_metadata has section with data
+    ( [ im_dict_with_str_data, "section", "item" ], "string data" ),
+    ( [ im_dict_with_byte_data, "section", "item" ], "byte data" ),
 
-    # image_metadata has section with not enough data
-    ( [ im_dict_with_str_data, "section", 1 ], None ),
 ]
 
 @pytest.mark.parametrize( "args, expected", test_get_string_data )

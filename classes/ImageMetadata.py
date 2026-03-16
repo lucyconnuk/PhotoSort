@@ -7,9 +7,9 @@ import piexif
 
 # Metadata constants
 SECTION = "0th"
-MAKE_INDEX = 271
-MODEL_INDEX = 272
-DATE_INDEX = 306
+MAKE_KEY = "Make"
+MODEL_KEY = "Model"
+DATETIME_KEY = "DateTime"
 DATE_FORMAT = "%Y:%m:%d %H:%M:%S"
 
 @dataclass( frozen=False, slots=True )
@@ -23,24 +23,23 @@ class ImageMetadata:
     def from_path( cls, image_path: Path ):
 
         # Get image metadata using piexif.
-        image_metadata = piexif.load( str( image_path ) )
+        image_metadata = piexif.load( str( image_path ), True )
 
         # Get camera make and model and date image taken from the metadata.
-        make = cls.get_string( image_metadata, SECTION, MAKE_INDEX )
-        model = cls.get_string( image_metadata, SECTION, MODEL_INDEX )
-        date = cls.get_date( cls.get_string( image_metadata, SECTION, DATE_INDEX ) )
+        make = cls.get_string( image_metadata, SECTION, MAKE_KEY )
+        model = cls.get_string( image_metadata, SECTION, MODEL_KEY )
+        date = cls.get_date( cls.get_string( image_metadata, SECTION, DATETIME_KEY ) )
 
         # Call the class constructor with this data.
         return cls( make, model, date )
         
     @staticmethod
-    def get_string( metadata_dict: dict[str, any], section: str, index: int ) -> str:
+    def get_string( metadata_dict: dict[str, any], section: str, key: str ) -> str:
         value = None
         if( metadata_dict 
-            and section in metadata_dict 
-            and type(metadata_dict[section]) is list 
-            and len( metadata_dict[section] ) > index ):
-            value = metadata_dict[section][index]
+            and metadata_dict[section]
+            and metadata_dict[section][key] ):
+            value = metadata_dict[section][key]
         if( type(value) is bytes ):
             value = value.decode('ascii')
         return value
