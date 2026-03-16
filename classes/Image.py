@@ -55,7 +55,7 @@ class Image:
             # Filter by owner and image_capture_type
             possible_path_formats = [ 
                 pf for pf in path_formats
-                if pf.owner_name == cls.camera.owner 
+                if pf.owner_name == cls.camera.owner.name
                 and pf.image_capture_type == cls.camera.image_capture_type
             ]
         return possible_path_formats
