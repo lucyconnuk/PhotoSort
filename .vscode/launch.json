@@ -1,4 +1,5 @@
 {
+    "version": "0.2.0",
     "configurations": [
         {
             "name": "Run PhotoSort on Digital/Mary/2006",
@@ -15,5 +16,25 @@
             "console": "integratedTerminal",
             "module": "photosort",
         },
+        {
+            "name": "Pytest",
+            "type": "debugpy",
+            "request": "launch",
+            "console": "integratedTerminal",
+            "module": "pytest",
+            "args": [],
+        },
+        {
+            "name": "Python: Debug Tests",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${file}",
+            "purpose": ["debug-test"],
+            "console": "integratedTerminal",
+            "env": {
+                "PYTEST_ADDOPTS": "--no-cov"
+            },
+            "justMyCode": true,
+        }
     ]
 }
