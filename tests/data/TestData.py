@@ -15,6 +15,13 @@ class TestData:
 
     o_alice = Owner( "Alice", "Alice-photos" )
     o_bob = Owner( "Bob", "Bob-pics" )
+    o_carol = Owner( "Carol", "CarolImages" )
+
+    owner_list = [
+        o_alice,
+        o_bob,
+        o_carol
+    ]
 
     ## Cameras used in tests
 
@@ -70,12 +77,16 @@ class TestData:
     # Path Formats used in tests
     pf_none = None
     pf_empty = PathFormat( None, None, None )
-    pf_canon100 = PathFormat( o_alice.name, ImageCaptureType.Digital, r"{ict}\{directory}\{yyyy}\{yyyy-mm}\{yyyy-mm-dd}" )
+    pf_alice_digital = PathFormat( o_alice.name, ImageCaptureType.Digital, r"{ict}\{directory}\{yyyy}\{yyyy-mm}\{yyyy-mm-dd}" )
+    pf_alice_film = PathFormat( o_alice.name, ImageCaptureType.Film, r"{ict}\{directory}\{yyyy}\{yyyy-mm}\{yyyy-mm-dd}" )
+    pf_bob_digital = PathFormat( o_bob.name, ImageCaptureType.Digital, r"{ict}\{directory}\{yyyy}\{yyyy-mm}\{yyyy-mm-dd}" )
 
     pf_list = [
-        #pf_none,
-        #pf_empty,
-        pf_canon100
+        pf_none,
+        pf_empty,
+        pf_alice_digital,
+        pf_alice_film,
+        pf_bob_digital
     ]
 
     ic_canon100 = Image( ImageFile( metadata = ImageMetadata( "Canon", "100", None ) ), camera = c_canon100 )

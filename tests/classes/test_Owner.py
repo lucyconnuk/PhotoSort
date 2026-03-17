@@ -1,5 +1,5 @@
 
-import pytest
+import pandas
 
 from classes.Owner import Owner
 
@@ -9,14 +9,14 @@ def test_from_dict():
     assert result.name == "Alice"
     assert result.directory == "AlicePics"
 
-@pytest.mark.skip("Not written")
 def test_dataframe_to_list():
-    pass
-
-@pytest.mark.skip("Not written")
-def test_get_all():
-    pass
-
-@pytest.mark.skip("Not written")
-def test_load_all():
-    pass
+    data = {
+        "name": [ "Alice", "Bob", "Carol" ],
+        "directory": [ "AlicePics", "BobPhotos", float('nan') ]
+    }
+    data_frame = pandas.DataFrame( data )
+    assert Owner.dataframe_to_list( data_frame ) == [
+        Owner( "Alice", "AlicePics" ),
+        Owner( "Bob", "BobPhotos" ),
+        Owner( "Carol", None ),
+    ]
