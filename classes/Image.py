@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-from datetime import datetime
 from pathlib import Path
 from typing import Optional
 
@@ -8,7 +7,10 @@ from classes.AppLogger import logger
 from classes.Camera import Camera
 from classes.ImageFile import ImageFile
 from classes.PathFormat import PathFormat
+from classes.PathModifier import PathModifier
 
+### TODO: Move to a config file
+ROOT_DIR = "C:\\Users\\Public\\Pictures\\PhotoOrganizer\\"
 
 @dataclass( frozen=False, slots=True )
 class Image:
@@ -18,21 +20,29 @@ class Image:
     expected_path: Optional[Path] = None
     #sidecar_filename: Optional[Path] = None
 
-    ### NEEDS WORKING ON ###
     # instance method
     def get_expected_path( self, path_format: PathFormat) -> Path:
-        path = ""
-        if path_format != "" and self.camera.image_capture_type and self.camera.owner and self.image_file.metadata.date_taken:
-            path = path_format.template
-            path = path.replace( r"\{ict\}", self.camera.image_capture_type.value )
-            path = path.replace( r"\{directory\}", self.camera.owner.directory )
-            path = path.replace( r"\{yyyy\}", datetime.strftime( self.image_file.metadata.date_taken, "%Y" ) )
-            path = path.replace( r"\{mm\}", datetime.strftime( self.image_file.metadata.date_taken, "%m" ) )
-            path = path.replace( r"\{dd\}", datetime.strftime( self.image_file.metadata.date_taken, "%d" ) )
-        return Path( path )
+        """
+        Get expected_path from path_format and data
+        """
+        path = path_format.template
+        
+        path_modifiers: list[PathModifier] = [
+            self.camera,
+            self.camera.owner,
+            self.image_file.metadata
+        ]
+
+        for path_modifier in path_modifiers:
+            path = path_modifier.modify_path( path )
+
+        return Path( ROOT_DIR ).joinpath( path ).joinpath( self.image_file.path.name )
 
     # instance method
     def get_matching_cameras( self, cameras: list[Camera] ) -> list[Camera]:
+        """
+        Get cameras which match image_file metadata for camera_make, camera_model and date_taken from a list of cameras
+        """
         possible_cameras = []
         if( self.image_file and self.image_file.metadata ):
             # Filter by make and model
@@ -50,14 +60,13 @@ class Image:
                 ]
         return possible_cameras
 
-    # TODO rename
     # instance method
-    def get_metadata(self):
+    def load(self):
 
         ## Get metadata
-        self.image_file.set_metadata()
+        self.image_file.load_metadata()
 
-        # Get camera from image_file metadata for camera_make, camera_model and date_taken
+        ## Get camera, if possible 
         possible_cameras = self.get_matching_cameras( appConfig.cameras )
         # If there is more or less than 1, log a warning
         if len(possible_cameras) != 1:
@@ -66,19 +75,20 @@ class Image:
         else:
             self.camera = possible_cameras[0]
 
-        ## Get path_format from owner and initial_capture_type
+        ## If camera found, get path_format, if possible
         path_format = None
-        if self.camera and self.camera.owner and self.camera.image_capture_type:
+        if self.camera and self.camera.owner and self.camera.image_capture_type: ### TODO move conditions 2 and 3 inside get_mpf?
             possible_pfs = self.camera.get_matching_path_formats( appConfig.path_formats )
 
             # If there is more or less than 1, log a warning
             if len(possible_pfs) != 1:
                 logger.warning( f"Found {len(possible_pfs)} possible path formats for {self.camera.owner.name} {self.camera.image_capture_type.value}")
-            # Else set path_format to this
+            # Else set path_format to this one
             else:
                 path_format = possible_pfs[0]
 
-        # Get image_expected_path from path_format and data
-        if( path_format ):
+        ## If path_format found, get image_expected_path
+        if path_format:
             self.expected_path = self.get_expected_path( path_format )
-        
+            logger.info( f"Expected path: {self.expected_path}")
+            logger.info( f"Expected path == Actual path: {self.expected_path == self.image_file.path}")

@@ -65,11 +65,13 @@ def main():
         images = []
         for image_path in image_paths:
             image = Image( ImageFile( image_path ) )
-            image.get_metadata()
+            image.load()
             images.append( image )
 
         logger.info( f"Created {len(images)} Image objects." )
         logger.info ( images[0] )
+
+        ### TODO - determine which images are in the wrong place by comparing image_path with expected_path
 
     else:
         logger.warning( message )
