@@ -23,6 +23,8 @@ class PathFormat:
         """
         Create PathFormat from dictionary of values
         """
+        PathFormat.validate_image_capture_type( data, "image_capture_type" )
+
         return cls(**data)
 
     @staticmethod
@@ -51,3 +53,12 @@ class PathFormat:
         return pandas.read_csv( 
             path_format_data_file
         )
+
+    ### TODO - duplicate!! refactor!!!
+    @staticmethod
+    def validate_image_capture_type( data: dict, field_name: str ):
+        if data.get( field_name ) is not None:
+            try:
+                data[field_name] = ImageCaptureType( data[field_name] )
+            except:
+                pass
