@@ -8,17 +8,21 @@ import pandas
 from classes.ImageCaptureType import ImageCaptureType
 from classes.Owner import Owner
 from classes.PathFormat import PathFormat
+from classes.PathModifier import PathModifier
 
 DATA_FILE_DATE_COLUMNS = [ "to_date", "from_date" ]
 DATA_FILE_DATE_FORMAT = "yyyy-MM-dd"
 PARSE_DATE_FORMAT = r"%Y-%m-%d"
 PARSE_DATE_FORMAT_SHORT = r"%Y-%m"
+ICT_PATH_TOKEN = r"{ict}"
+ICT_PATH_DEFAULT = "UnknownICT"
+
 
 # Make this class type-safe and memory-efficient, using frozen and slots parameters.
 # See https://docs.python.org/3/library/dataclasses.html#frozen-instances
 # and https://github.com/orgs/community/discussions/168147 
 @dataclass( frozen=True, slots=True )
-class Camera:
+class Camera(PathModifier):
     """
     A physical device which captures Images. 
     Image Capture Type can be straight to Digital, or scanned from Film.
@@ -37,7 +41,7 @@ class Camera:
     # @classmethod - See https://stackoverflow.com/questions/12179271/meaning-of-classmethod-and-staticmethod-for-a-beginner 
     # cls means "this class" - See https://realpython.com/ref/glossary/cls/
     @classmethod
-    def from_dict( cls, data: dict, owners: list[Owner] ) -> Camera:
+    def from_dict( cls, data: dict, owners: list[Owner] ) -> Camera: # pragma: no cover
         """
         Create Camera from dictionary of values
         """
@@ -54,12 +58,26 @@ class Camera:
         return cls(**data)
 
     # instance method
+    def modify_path( self, template: str ) -> str:
+        replacement_string = ICT_PATH_DEFAULT
+        try:
+            replacement_string = self.image_capture_type.value
+        except:
+            # Could log here if required
+            pass
+        return template.replace( ICT_PATH_TOKEN, replacement_string )
+
+    # instance method
     def get_matching_path_formats( self, path_formats: list[PathFormat] ) -> list[PathFormat]:
+        """
+        Get path_formats which match owner and image_capture_type from a list of path_formats
+        """
         possible_path_formats = []
         # Filter by owner and image_capture_type
         possible_path_formats = [ 
             pf for pf in path_formats
-            if pf.owner_name == self.owner.name
+            if pf != None
+            and pf.owner_name == self.owner.name
             and pf.image_capture_type == self.image_capture_type
         ]
         return possible_path_formats
@@ -85,7 +103,7 @@ class Camera:
         return [ Camera.from_dict( record, owners ) for record in cameras_ld ]
 
     @staticmethod
-    def get_all( file_path: str, owners: list[Owner] ) -> list[Camera]:
+    def get_all( file_path: str, owners: list[Owner] ) -> list[Camera]: # pragma: no cover
         """
         Given a path to a csv file containing Camera data, return a list of Cameras.
         """
@@ -94,7 +112,7 @@ class Camera:
         return Camera.dataframe_to_list( cameras_df, owners )
     
     @staticmethod
-    def load_all( camera_data_file: Path ) -> pandas.DataFrame:
+    def load_all( camera_data_file: Path ) -> pandas.DataFrame: # pragma: no cover
         """
         Get Camera data from csv file.
         """
@@ -125,10 +143,14 @@ class Camera:
         if data.get( field_name ) is not None:
             data[field_name] = Camera.parse_date( data[field_name] )
 
+    ### TODO - duplicate!! refactor!!!
     @staticmethod
     def validate_image_capture_type( data: dict, field_name: str ):
         if data.get( field_name ) is not None:
-            data[field_name] = ImageCaptureType( data[field_name] )
+            try:
+                data[field_name] = ImageCaptureType( data[field_name] )
+            except:
+                pass
 
     @staticmethod
     def validate_int( data: dict, field_name: str ):
@@ -138,4 +160,7 @@ class Camera:
     @staticmethod
     def validate_owner( data: dict, field_name: str, owners: list[Owner] ):
         if data.get( field_name ):
-            data[field_name] = [ owner for owner in owners if owner.name == data[field_name].strip() ][0]
+            try:
+                data[field_name] = [ owner for owner in owners if owner.name == data[field_name].strip() ][0]
+            except:
+                pass

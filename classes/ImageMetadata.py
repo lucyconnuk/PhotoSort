@@ -5,6 +5,8 @@ from typing import Optional
 
 import piexif
 
+from classes.PathModifier import PathModifier
+
 # Metadata constants
 SECTION = "0th"
 MAKE_KEY = "Make"
@@ -12,8 +14,22 @@ MODEL_KEY = "Model"
 DATETIME_KEY = "DateTime"
 DATE_FORMAT = "%Y:%m:%d %H:%M:%S"
 
-@dataclass( frozen=False, slots=True )
-class ImageMetadata:
+PATH_TOKENS = {
+    r"{year}":          [ r"%Y", "Year"],
+    r"{yyyy}":          [ r"%Y", "Year"],
+    r"{yy}":            [ r"%Y", "Year"],
+    r"{month}":         [ r"%m", "Month"],
+    r"{mm}":            [ r"%m", "Month"],
+    r"{day}":           [ r"%d", "Day"],
+    r"{dd}":            [ r"%d", "Day"],
+    r"{yyyy-mm}":       [ r"%Y-%m", "YearMonth"],
+    r"{yyyy-mm-dd}":    [ r"%Y-%m-%d", "YearMonthDay"],
+}
+
+PATH_DEFAULT_PREFIX = "Unknown"
+
+@dataclass( frozen=True, slots=True )
+class ImageMetadata(PathModifier):
     """
     (Some of) the metadata associated with an image. 
     The only metadata we are interested in here is camera make and model and date taken.
@@ -37,6 +53,28 @@ class ImageMetadata:
         # Call the class constructor with this data.
         return cls( make, model, date )
         
+    # instance method
+    def modify_path( self, template: str ) -> str:
+
+        result = template
+        date_taken = None
+
+        try:
+            date_taken = self.date_taken
+        except:
+            # Could log here if required
+            pass
+
+        for token in PATH_TOKENS:
+            search_string = token
+            if( date_taken ):
+                replacement_string = datetime.strftime( date_taken, PATH_TOKENS[token][0] )
+            else:
+                replacement_string = PATH_DEFAULT_PREFIX + PATH_TOKENS[token][1]
+            result = result.replace( search_string, replacement_string )
+
+        return result       
+
     @staticmethod
     def get_string( metadata_dict: dict[str, any], section: str, key: str ) -> str:
         value = None

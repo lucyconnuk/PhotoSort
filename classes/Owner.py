@@ -3,10 +3,14 @@ from pathlib import Path
 
 import pandas
 
+from classes.PathModifier import PathModifier
+
+PATH_TOKEN = r"{directory}" ### TODO: {owner} would be better
+PATH_DEFAULT = "UnknownOwner"
 
 # For additional coding notes, see Camera.py
 @dataclass( frozen=True, slots=True )
-class Owner:
+class Owner(PathModifier):
     """
     A person who owns a Camera and the Images which it took.
     Has a Name, and a Directory where their Images are stored.
@@ -14,6 +18,16 @@ class Owner:
     
     name: str
     directory: str
+
+    # instance method
+    def modify_path( self, template: str ) -> str:
+        replacement_string = PATH_DEFAULT
+        try:
+            replacement_string = self.directory
+        except:
+            # Could log here if required
+            pass
+        return template.replace( PATH_TOKEN, replacement_string )
 
     @classmethod
     def from_dict( cls, data: dict ) -> Owner:
@@ -32,7 +46,7 @@ class Owner:
         return [ Owner.from_dict( record ) for record in owners_ld ]
 
     @staticmethod
-    def get_all( file_path: str ) -> list[Owner]:
+    def get_all( file_path: str ) -> list[Owner]: # pragma: no cover
         """
         Given a path to a csv file containing Owner data, return a list of Owners.
         """
@@ -41,7 +55,7 @@ class Owner:
         return Owner.dataframe_to_list( owners_df )
     
     @staticmethod
-    def load_all( owner_data_file: Path ) -> pandas.DataFrame:
+    def load_all( owner_data_file: Path ) -> pandas.DataFrame: # pragma: no cover
         """
         Get Owner data from csv file.
         """
