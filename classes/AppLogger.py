@@ -27,9 +27,11 @@ class AppLogger:
         # See https://docs.python.org/3/howto/logging-cookbook.html#logging-to-multiple-destinations
         start_time = datetime.now()
         start_time_text = start_time.strftime("%Y%m%dT%H%M%S")
+
+        ### TODO - this is being shared, sort it out
         logging.basicConfig( 
             filename = fr'logs\photosort-{start_time_text}.log', 
-            level = logging.INFO,
+            level = logging.DEBUG,
             format = '%(asctime)s %(levelname)s: %(message)s',
             datefmt = '%y-%m-%d %H:%M:%S'
         )
