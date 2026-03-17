@@ -58,16 +58,6 @@ class Camera(PathModifier):
         return cls(**data)
 
     # instance method
-    def modify_path( self, template: str ) -> str:
-        replacement_string = ICT_PATH_DEFAULT
-        try:
-            replacement_string = self.image_capture_type.value
-        except:
-            # Could log here if required
-            pass
-        return template.replace( ICT_PATH_TOKEN, replacement_string )
-
-    # instance method
     def get_matching_path_formats( self, path_formats: list[PathFormat] ) -> list[PathFormat]:
         """
         Get path_formats which match owner and image_capture_type from a list of path_formats
@@ -81,6 +71,16 @@ class Camera(PathModifier):
             and pf.image_capture_type == self.image_capture_type
         ]
         return possible_path_formats
+
+    # instance method
+    def modify_path( self, template: str ) -> str:
+        replacement_string = ICT_PATH_DEFAULT
+        try:
+            replacement_string = self.image_capture_type.value
+        except:
+            # Could log here if required
+            pass
+        return template.replace( ICT_PATH_TOKEN, replacement_string )
 
     @staticmethod
     def dataframe_to_list( cameras_df: pandas.DataFrame, owners: list[Owner] ) -> list[Camera]:

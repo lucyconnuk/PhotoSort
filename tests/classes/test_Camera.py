@@ -17,6 +17,16 @@ test_get_matching_path_formats_data = [
 def test_get_matching_path_formats( args, expected ):
     assert args[0].get_matching_path_formats( args[1] ) == expected
 
+test_modify_path_data = [
+    ( TestData.c_canon100, "asdf/Digital/hjkl" ),
+    ( TestData.c_filmscan6, "asdf/Film/hjkl" ),
+    ( TestData.c_empty, "asdf/UnknownICT/hjkl" ),
+]
+
+@pytest.mark.parametrize( "args, expected", test_modify_path_data )
+def test_modify_path( args, expected ):
+    assert args.modify_path( r"asdf/{ict}/hjkl" ) == expected
+
 def test_dataframe_to_list():
     data = {
         "make": [ "Canon", "Nikon", "FilmScan" ],
