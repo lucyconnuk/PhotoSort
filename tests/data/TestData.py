@@ -13,6 +13,7 @@ class TestData:
 
     ## Owners used in tests
 
+    o_empty = Owner( None, None )
     o_alice = Owner( "Alice", "Alice-photos" )
     o_bob = Owner( "Bob", "Bob-pics" )
     o_carol = Owner( "Carol", "CarolImages" )
@@ -24,6 +25,9 @@ class TestData:
     ]
 
     ## Cameras used in tests
+
+    # Empty camera object
+    c_empty = Camera( None, None, None )
 
     # Type of camera only owned by Alice
     c_canon100 = Camera( "Canon", "100", ImageCaptureType.Digital, o_alice )

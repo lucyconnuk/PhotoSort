@@ -35,6 +35,40 @@ def test_from_path(mocker):
     assert result.camera_model == "EOS Rebel T6"
     assert result.date_taken == datetime( 2021, 2, 3, 4, 5, 6 )
 
+test_modify_path_data = [
+    ( r"asdf/{year}/hjkl", "asdf/2001/hjkl" ),
+    ( r"asdf/{yyyy}/hjkl", "asdf/2001/hjkl" ),
+    ( r"asdf/{yy}/hjkl", "asdf/2001/hjkl" ),
+    ( r"asdf/{month}/hjkl", "asdf/02/hjkl" ),
+    ( r"asdf/{mm}/hjkl", "asdf/02/hjkl" ),
+    ( r"asdf/{day}/hjkl", "asdf/03/hjkl" ),
+    ( r"asdf/{dd}/hjkl", "asdf/03/hjkl" ),
+    ( r"asdf/{yyyy-mm}/hjkl", "asdf/2001-02/hjkl" ),
+    ( r"asdf/{yyyy-mm-dd}/hjkl", "asdf/2001-02-03/hjkl" ),
+]
+
+@pytest.mark.parametrize( "args, expected", test_modify_path_data )
+def test_modify_path( args, expected ):
+    im_test = ImageMetadata( None, None, datetime( 2001, 2, 3 ) )
+    assert im_test.modify_path( args ) == expected
+
+test_modify_path_data_no_date_taken = [
+    ( r"asdf/{year}/hjkl", "asdf/UnknownYear/hjkl" ),
+    ( r"asdf/{yyyy}/hjkl", "asdf/UnknownYear/hjkl" ),
+    ( r"asdf/{yy}/hjkl", "asdf/UnknownYear/hjkl" ),
+    ( r"asdf/{month}/hjkl", "asdf/UnknownMonth/hjkl" ),
+    ( r"asdf/{mm}/hjkl", "asdf/UnknownMonth/hjkl" ),
+    ( r"asdf/{day}/hjkl", "asdf/UnknownDay/hjkl" ),
+    ( r"asdf/{dd}/hjkl", "asdf/UnknownDay/hjkl" ),
+    ( r"asdf/{yyyy-mm}/hjkl", "asdf/UnknownYearMonth/hjkl" ),
+    ( r"asdf/{yyyy-mm-dd}/hjkl", "asdf/UnknownYearMonthDay/hjkl" ),
+]
+
+@pytest.mark.parametrize( "args, expected", test_modify_path_data_no_date_taken )
+def test_modify_path_no_date_taken( args, expected ):
+    im_test = ImageMetadata( None, None, None )
+    assert im_test.modify_path( args ) == expected
+
 im_not_dict =                   ""
 im_empty_dict =                 dict()
 im_dict_with_undefined_section: dict[str, any] = { "section": None }
