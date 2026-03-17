@@ -57,18 +57,11 @@ class ImageMetadata(PathModifier):
     def modify_path( self, template: str ) -> str:
 
         result = template
-        date_taken = None
-
-        try:
-            date_taken = self.date_taken
-        except:
-            # Could log here if required
-            pass
 
         for token in PATH_TOKENS:
             search_string = token
-            if( date_taken ):
-                replacement_string = datetime.strftime( date_taken, PATH_TOKENS[token][0] )
+            if( self.date_taken ):
+                replacement_string = datetime.strftime( self.date_taken, PATH_TOKENS[token][0] )
             else:
                 replacement_string = PATH_DEFAULT_PREFIX + PATH_TOKENS[token][1]
             result = result.replace( search_string, replacement_string )

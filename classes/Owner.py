@@ -21,12 +21,10 @@ class Owner(PathModifier):
 
     # instance method
     def modify_path( self, template: str ) -> str:
-        replacement_string = PATH_DEFAULT
-        try:
+        if self.directory:
             replacement_string = self.directory
-        except:
-            # Could log here if required
-            pass
+        else:
+            replacement_string = PATH_DEFAULT
         return template.replace( PATH_TOKEN, replacement_string )
 
     @classmethod
