@@ -5,7 +5,7 @@ import pandas
 
 from classes.PathModifier import PathModifier
 
-PATH_TOKEN = r"{directory}" ### TODO: {owner} would be better
+PATH_TOKEN = r"{directory}"
 PATH_DEFAULT = "UnknownOwner"
 
 # For additional coding notes, see Camera.py

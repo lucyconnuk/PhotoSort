@@ -4,6 +4,7 @@ from pathlib import Path
 from typing import Optional
 
 import pandas
+from dateutil.relativedelta import relativedelta
 
 from classes.ImageCaptureType import ImageCaptureType
 from classes.Owner import Owner
@@ -50,7 +51,7 @@ class Camera(PathModifier):
         Camera.validate_owner( data, "owner", owners )
         Camera.validate_int( data, "instance" )
         Camera.validate_date( data, "from_date" )
-        Camera.validate_date( data, "to_date" )
+        Camera.validate_date( data, "to_date", True )
 
         # Coding note: **data means "all the values in data"
         # So here we are passing ALL of the values in the data dict, including the ones we've just validated, to the cls() method
@@ -123,34 +124,30 @@ class Camera(PathModifier):
         )
 
     @staticmethod
-    def parse_date( date_str: str ) -> Optional[date]:
+    def parse_date( date_str: str, end_of_month: bool = False ) -> Optional[date]:
         """
         Parse a date string, which can be in year-month-day or year-month format,
         and return a valid date, or None.
         """
-        camera_date = None
+        result = None
         try:
-            camera_date = date.strptime( date_str, PARSE_DATE_FORMAT ) 
+            result = date.strptime( date_str, PARSE_DATE_FORMAT ) 
         except ValueError:
             try:
-                camera_date = date.strptime( date_str, PARSE_DATE_FORMAT_SHORT ) 
+                result = date.strptime( date_str, PARSE_DATE_FORMAT_SHORT ) 
             except ValueError:
-                camera_date = None
-        return camera_date
+                result = None
+            else:
+                if end_of_month:
+                    result = result + relativedelta( months = 1 )
+                    result = result + relativedelta( days = -1 )
+
+        return result
 
     @staticmethod
-    def validate_date( data: dict, field_name: str ):
+    def validate_date( data: dict, field_name: str, end_of_month: bool = False ):
         if data.get( field_name ) is not None:
-            data[field_name] = Camera.parse_date( data[field_name] )
-
-    ### TODO - duplicate!! refactor!!!
-    @staticmethod
-    def validate_image_capture_type( data: dict, field_name: str ):
-        if data.get( field_name ) is not None:
-            try:
-                data[field_name] = ImageCaptureType( data[field_name] )
-            except:
-                pass
+            data[field_name] = Camera.parse_date( data[field_name], end_of_month )
 
     @staticmethod
     def validate_int( data: dict, field_name: str ):

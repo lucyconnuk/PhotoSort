@@ -38,37 +38,44 @@ def test_dataframe_to_list():
         "to_date": [ "2011-02", "2011-02-03", float('nan') ],
     }
     data_frame = pandas.DataFrame( data )
-    assert Camera.dataframe_to_list( data_frame, TestData.owner_list ) == [
-        Camera( "Canon", "100", ImageCaptureType.Digital, TestData.o_alice, 1, date( 2001, 2, 1 ) , date( 2011, 2, 1 ) ), ### TODO - should probably return last day of month
-        Camera( "Nikon", "2", ImageCaptureType.Digital, TestData.o_bob, None, date( 2001, 2, 3 ), date( 2011, 2, 3 ) ),
-        Camera( "FilmScan", "6", ImageCaptureType.Film, TestData.o_carol, None, None, None ),
-    ]
+    list = Camera.dataframe_to_list( data_frame, TestData.owner_list )
+    assert len(list) == 3
+    assert list[0] == Camera( "Canon", "100", ImageCaptureType.Digital, TestData.o_alice, 1, date( 2001, 2, 1 ) , date( 2011, 2, 28 ) )
+    assert list[1] == Camera( "Nikon", "2", ImageCaptureType.Digital, TestData.o_bob, None, date( 2001, 2, 3 ), date( 2011, 2, 3 ) )
+    assert list[2] == Camera( "FilmScan", "6", ImageCaptureType.Film, TestData.o_carol, None, None, None )
 
 test_parse_date_data = [
 
     # date_str is empty
-    ( "", None ),
+    ( ( "", ), None ),
 
     # date_str is a valid year-month date
-    ( "1994-05", date( 1994, 5, 1 ) ),
+    ( ( "1994-05", ), date( 1994, 5, 1 ) ),
+    
+    # date_str is a valid year-month date, for which we want the end of the month
+    ( ( "1994-05", True ), date( 1994, 5, 31 ), ),
+    ( ( "1994-12", True ), date( 1994, 12, 31 ), ), # End of year
+    ( ( "2004-02", True ), date( 2004, 2, 29 ), ),  # Leap year
     
     # date_str is a valid year-month-day date
-    ( "1969-08-31", date( 1969, 8, 31 ) ),
+    ( ( "1969-08-15", ), date( 1969, 8, 15 ) ),
 
     # date_str is not a valid date
-    ( "1969-08-31xxx", None ),
+    ( ( "1969-08-15xxx", ), None ),
 ]
 
 @pytest.mark.parametrize( "args, expected", test_parse_date_data )
 def test_parse_date( args, expected ):
-    assert Camera.parse_date( args ) == expected
+    assert Camera.parse_date( *args ) == expected
 
 test_validate_date_data = [
     ( [ { "from_date": "1994-05" }, None ], { "from_date": "1994-05" } ),
     ( [ { "from_date": "1994-05" }, "unknown" ], { "from_date": "1994-05" } ),
     ( [ { "from_date": "1994-05" }, "from_date" ], { "from_date": date( 1994, 5, 1 ) } ),
-    ( [ { "from_date": "1969-08-31" }, "from_date" ], { "from_date": date( 1969, 8, 31 ) } ),
-    ( [ { "from_date": "1969-08-31xxx" }, "from_date" ], { "from_date": None } ),
+    ( [ { "to_date": "1994-06" }, "to_date" ], { "to_date": date( 1994, 6, 1 ) } ),
+    ( [ { "to_date": "1994-06" }, "to_date", True ], { "to_date": date( 1994, 6, 30 ) } ),
+    ( [ { "from_date": "1969-08-15" }, "from_date" ], { "from_date": date( 1969, 8, 15 ) } ),
+    ( [ { "from_date": "1969-08-15xxx" }, "from_date" ], { "from_date": None } ),
 ]
 
 @pytest.mark.parametrize( "args, expected", test_validate_date_data )
