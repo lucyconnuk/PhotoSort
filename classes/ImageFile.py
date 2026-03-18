@@ -12,7 +12,7 @@ class ImageFile:
     An image file object. Has a Path, and Metadata.
     """    
     
-    path: Optional[Path] = None
+    path: Path
     metadata: Optional[ImageMetadata] = None
 
     # instance method

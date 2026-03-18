@@ -15,7 +15,7 @@ ROOT_DIR = "C:\\Users\\Public\\Pictures\\PhotoOrganizer\\"
 @dataclass( frozen=False, slots=True )
 class Image:
     
-    image_file: Optional[ImageFile] = None
+    image_file: ImageFile
     camera: Optional[Camera] = None
     expected_path: Optional[Path] = None
     #sidecar_filename: Optional[Path] = None

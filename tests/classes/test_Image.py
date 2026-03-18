@@ -1,6 +1,10 @@
 
+from pathlib import Path
+
 import pytest
 
+from classes.Image import Image
+from classes.PathFormat import PathFormat
 from tests.data.TestData import TestData
 
 test_get_matching_cameras_data = [
@@ -48,4 +52,21 @@ test_get_matching_cameras_data = [
 
 @pytest.mark.parametrize( "args, expected", test_get_matching_cameras_data )
 def test_get_matching_cameras( args, expected ):
-    assert args[0].get_matching_cameras( args[1] ) == expected
+    test_image: Image = args[0]
+    assert test_image.get_matching_cameras( args[1] ) == expected
+
+test_get_expected_path_data = [
+    ### TODO get rid of dependency on ROOT_DIR
+    ( TestData.i2_canon100, Path( r"C:/Users/Public/Pictures/PhotoOrganizer/Digital/Alice-photos/UnknownYearMonthDay/testpath" ) ),
+    ( TestData.i2_nikon2, Path( r"C:/Users/Public/Pictures/PhotoOrganizer/Digital/Bob-pics/UnknownYearMonthDay/testpath" ) ),
+    ( TestData.i2_canon500_teens, Path( r"C:/Users/Public/Pictures/PhotoOrganizer/Digital/Alice-photos/2011-01-01/testpath" ) ),
+    ( TestData.i2_canon500_twenties, Path( r"C:/Users/Public/Pictures/PhotoOrganizer/Digital/Bob-pics/2021-01-01/testpath" ) ),
+    ( TestData.i2_filmscan6, Path( r"C:/Users/Public/Pictures/PhotoOrganizer/Film/Alice-photos/UnknownYearMonthDay/testpath" ) ),
+]
+
+@pytest.mark.parametrize( "args, expected", test_get_expected_path_data )
+def test_get_expected_path( args, expected ):
+    test_image: Image = args
+    test_path_format = PathFormat( None, None, r"{ict}\{directory}\{yyyy-mm-dd}" )
+    actual = test_image.get_expected_path( test_path_format )
+    assert actual == expected

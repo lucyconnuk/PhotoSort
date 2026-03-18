@@ -33,7 +33,7 @@ class Camera(PathModifier):
     make: str
     model: str
     image_capture_type: ImageCaptureType
-    owner: Owner = None
+    owner: Owner
     instance: Optional[int] = 0
     from_date: Optional[date] = None
     to_date: Optional[date] = None
