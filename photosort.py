@@ -16,9 +16,6 @@ def get_command_line_args():
         "-path",
         "-p",
         help = "Path to the root image directory",
-
-        # TODO Remove this test default setting
-        default = r'C:\Users\Public\Pictures\PhotoOrganizer\Digital\Mary\2006\2006-03\2006-03-06'
     )
     return parser.parse_args()
 

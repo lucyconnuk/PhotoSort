@@ -2,7 +2,15 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Run PhotoSort on Digital/Mary/2006",
+            "name": "Run PhotoSort on small dir (6 images)",
+            "type": "debugpy",
+            "request": "launch",
+            "console": "integratedTerminal",
+            "module": "photosort",
+            "args": [ "-p", "C:\\Users\\Public\\Pictures\\PhotoOrganizer\\Digital\\Mary\\2006\\2006-03\\2006-03-06" ],
+        },
+        {
+            "name": "Run PhotoSort on medium dir (187 images)",
             "type": "debugpy",
             "request": "launch",
             "console": "integratedTerminal",
