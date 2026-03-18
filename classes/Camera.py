@@ -46,7 +46,7 @@ class Camera(PathModifier):
         Create Camera from dictionary of values
         """
 
-        Camera.validate_image_capture_type( data, "image_capture_type" )
+        ImageCaptureType.validate_from_dict_field( data, "image_capture_type" )
         Camera.validate_owner( data, "owner", owners )
         Camera.validate_int( data, "instance" )
         Camera.validate_date( data, "from_date" )
