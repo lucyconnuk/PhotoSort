@@ -7,3 +7,11 @@ class ImageCaptureType(Enum):
     """
     Film = "Film"
     Digital = "Digital"
+
+    @staticmethod
+    def validate_from_dict_field( data: dict, field_name: str ):
+        if data.get( field_name ) is not None:
+            try:
+                data[field_name] = ImageCaptureType( data[field_name] )
+            except:
+                pass
