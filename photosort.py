@@ -7,8 +7,6 @@ from classes.File import File
 from classes.Image import Image
 from classes.ImageFile import ImageFile
 
-# TODO:
-# - develop main
 
 def get_command_line_args():
     parser = argparse.ArgumentParser(
@@ -71,7 +69,11 @@ def main():
         logger.info( f"Created {len(images)} Image objects." )
         logger.info ( images[0] )
 
-        ### TODO - determine which images are in the wrong place by comparing image_path with expected_path
+        # Determine which images are in the wrong place by comparing image_path with expected_path
+        image: Image
+        for image in images:
+            if image.image_file.path != image.expected_path:
+                logger.warning( f"Image {image.image_file.path} should be at {image.expected_path}" )
 
     else:
         logger.warning( message )
