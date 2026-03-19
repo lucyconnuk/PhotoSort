@@ -8,6 +8,7 @@ from classes.ImageCaptureType import ImageCaptureType
 from tests.data.TestData import TestData
 
 test_get_matching_path_formats_data = [
+    ( [ TestData.c_empty, TestData.pf_list ], [] ),
     ( [ TestData.c_canon100, TestData.pf_list ], [ TestData.pf_alice_digital ] ),
     ( [ TestData.c_filmscan6, TestData.pf_list ], [ TestData.pf_alice_film ] ),
     ( [ TestData.c_nikon2, TestData.pf_list ], [ TestData.pf_bob_digital ] ),

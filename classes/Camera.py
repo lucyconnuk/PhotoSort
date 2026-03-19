@@ -63,14 +63,16 @@ class Camera(PathModifier):
         """
         Get path_formats which match owner and image_capture_type from a list of path_formats
         """
-        possible_path_formats = []
-        # Filter by owner and image_capture_type
-        possible_path_formats = [ 
-            pf for pf in path_formats
-            if pf != None
-            and pf.owner_name == self.owner.name
-            and pf.image_capture_type == self.image_capture_type
-        ]
+        if self.owner and self.image_capture_type:
+            # Filter by owner and image_capture_type
+            possible_path_formats = [ 
+                pf for pf in path_formats
+                if pf != None
+                and pf.owner_name == self.owner.name
+                and pf.image_capture_type == self.image_capture_type
+            ]
+        else:
+            possible_path_formats = []
         return possible_path_formats
 
     # instance method
