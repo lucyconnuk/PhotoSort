@@ -42,7 +42,7 @@ class Camera(PathModifier):
     # @classmethod - See https://stackoverflow.com/questions/12179271/meaning-of-classmethod-and-staticmethod-for-a-beginner 
     # cls means "this class" - See https://realpython.com/ref/glossary/cls/
     @classmethod
-    def from_dict( cls, data: dict, owners: list[Owner] ) -> Camera: # pragma: no cover
+    def from_dict( cls, data: dict, owners: list[Owner] ) -> Camera:
         """
         Create Camera from dictionary of values
         """
@@ -104,7 +104,7 @@ class Camera(PathModifier):
         return [ Camera.from_dict( record, owners ) for record in cameras_ld ]
 
     @staticmethod
-    def get_all( file_path: str, owners: list[Owner] ) -> list[Camera]: # pragma: no cover
+    def get_all( file_path: str, owners: list[Owner] ) -> list[Camera]:
         """
         Given a path to a csv file containing Camera data, return a list of Cameras.
         """
@@ -113,7 +113,7 @@ class Camera(PathModifier):
         return Camera.dataframe_to_list( cameras_df, owners )
     
     @staticmethod
-    def load_all( camera_data_file: Path ) -> pandas.DataFrame: # pragma: no cover
+    def load_all( camera_data_file: Path ) -> pandas.DataFrame:
         """
         Get Camera data from csv file.
         """

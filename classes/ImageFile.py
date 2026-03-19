@@ -16,7 +16,7 @@ class ImageFile:
     metadata: Optional[ImageMetadata] = None
 
     # instance method
-    def load_metadata(self): # pragma: no cover
+    def load_metadata(self):
 
         # Get image metadata from image file
         self.metadata = ImageMetadata.from_path( self.path )

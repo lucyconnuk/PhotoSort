@@ -44,7 +44,7 @@ class Owner(PathModifier):
         return [ Owner.from_dict( record ) for record in owners_ld ]
 
     @staticmethod
-    def get_all( file_path: str ) -> list[Owner]: # pragma: no cover
+    def get_all( file_path: str ) -> list[Owner]:
         """
         Given a path to a csv file containing Owner data, return a list of Owners.
         """
@@ -53,7 +53,7 @@ class Owner(PathModifier):
         return Owner.dataframe_to_list( owners_df )
     
     @staticmethod
-    def load_all( owner_data_file: Path ) -> pandas.DataFrame: # pragma: no cover
+    def load_all( owner_data_file: Path ) -> pandas.DataFrame:
         """
         Get Owner data from csv file.
         """
