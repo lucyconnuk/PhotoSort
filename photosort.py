@@ -26,10 +26,10 @@ def main():
     args = get_command_line_args()
     logger.info( f"Args are: {args}" )
     path_str = args.path if args.path else input( "Enter path to the root image directory: " ).strip()
-    path = Path( path_str )
+    appConfig.root_image_dir = Path( path_str )
 
     # Check that the root image directory path points to a valid directory.
-    (valid, message) = File.check_valid_path( path )
+    (valid, message) = File.check_valid_path( appConfig.root_image_dir )
     if valid:
         logger.info( message )
 
@@ -41,14 +41,14 @@ def main():
         for path_format in appConfig.path_formats: logger.debug( path_format )
 
         # Find all the files in the directory.
-        files_and_dirs = path.rglob("*")
+        files_and_dirs = appConfig.root_image_dir.rglob("*")
         file_paths = File.get_files( files_and_dirs )
         
         # Find all the image files in the set.
         image_paths = File.get_image_files( file_paths )
         logger.info( f"Found {len(image_paths)} images." )
         logger.debug( "Images are: ")
-        for image_path in image_paths: logger.debug( image_path.relative_to( path ) )
+        for image_path in image_paths: logger.debug( image_path.relative_to( appConfig.root_image_dir ) )
 
         # # Find all the XMP files in the set.
         # xmp_file_paths = File.get_xmp_files( file_paths )

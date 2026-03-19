@@ -9,20 +9,21 @@ from classes.PathFormat import PathFormat
 from tests.data.TestData import TestData
 
 test_get_expected_path_data = [
-    ### TODO get rid of dependency on ROOT_DIR
-    ( TestData.i2_canon100, Path( r"C:/Users/Public/Pictures/PhotoOrganizer/Digital/Alice-photos/UnknownYearMonthDay/testpath" ) ),
-    ( TestData.i2_nikon2, Path( r"C:/Users/Public/Pictures/PhotoOrganizer/Digital/Bob-pics/UnknownYearMonthDay/testpath" ) ),
-    ( TestData.i2_canon500_teens, Path( r"C:/Users/Public/Pictures/PhotoOrganizer/Digital/Alice-photos/2011-01-01/testpath" ) ),
-    ( TestData.i2_canon500_twenties, Path( r"C:/Users/Public/Pictures/PhotoOrganizer/Digital/Bob-pics/2021-01-01/testpath" ) ),
-    ( TestData.i2_filmscan6, Path( r"C:/Users/Public/Pictures/PhotoOrganizer/Film/Alice-photos/UnknownYearMonthDay/testpath" ) ),
+    ( TestData.i2_canon100, r"Digital/Alice-photos/UnknownYearMonthDay/testpath" ),
+    ( TestData.i2_nikon2, r"Digital/Bob-pics/UnknownYearMonthDay/testpath" ),
+    ( TestData.i2_canon500_teens, r"Digital/Alice-photos/2011-01-01/testpath" ),
+    ( TestData.i2_canon500_twenties, r"Digital/Bob-pics/2021-01-01/testpath" ),
+    ( TestData.i2_filmscan6, r"Film/Alice-photos/UnknownYearMonthDay/testpath" ),
 ]
 
 @pytest.mark.parametrize( "args, expected", test_get_expected_path_data )
 def test_get_expected_path( args, expected ):
     test_image: Image = args
+    test_root: Path = Path( "test_root_image_dir" )
     test_path_format = PathFormat( None, None, r"{ict}\{directory}\{yyyy-mm-dd}" )
-    actual = test_image.get_expected_path( test_path_format )
-    assert actual == expected
+
+    actual = test_image.get_expected_path( test_root, test_path_format )
+    assert actual == test_root.joinpath( Path( expected ) )
 
 test_get_matching_cameras_data = [
 
@@ -133,6 +134,7 @@ def test_load(mocker):
     mocker.patch( "classes.ImageFile.ImageFile.load_metadata" )
     mocker.patch( "classes.Image.Image.load_camera" )
     mocker.patch( "classes.Image.Image.load_image_expected_path" )
+    mocker.patch( "classes.AppConfig.AppConfig.root_image_dir" )
 
     # Call the function under test
     test_image.load()
@@ -213,7 +215,7 @@ def test_load_image_expected_path_no_camera(mocker):
     mocker.patch( "classes.AppLogger.logger.info" )
 
     # Call the function under test
-    test_image.load_image_expected_path()
+    test_image.load_image_expected_path( "dummy" )
 
     # Check that the following functions were called (or not) and expected_path was set (or not)
     test_image.get_path_format.assert_not_called()
@@ -232,7 +234,7 @@ def test_load_image_expected_path_no_path_format(mocker):
     mocker.patch( "classes.AppLogger.logger.info" )
 
     # Call the function under test
-    test_image.load_image_expected_path()
+    test_image.load_image_expected_path( "dummy" )
 
     # Check that the following functions were called (or not) and expected_path was set (or not)
     test_image.get_path_format.assert_called_once()
@@ -251,11 +253,11 @@ def test_load_image_expected_path(mocker):
     mocker.patch( "classes.AppLogger.logger.info" )
 
     # Call the function under test
-    test_image.load_image_expected_path()
+    test_image.load_image_expected_path( "dummy" )
 
     # Check that the following functions were called (or not) and expected_path was set (or not)
     test_image.get_path_format.assert_called_once()
-    test_image.get_expected_path.assert_called_once_with( "valid_path_format" )
+    test_image.get_expected_path.assert_called_once_with( "dummy", "valid_path_format" )
     logger.info.assert_has_calls( [
         mocker.call("Expected path: valid_expected_path"), 
         mocker.call("Expected path == Actual path: False")
