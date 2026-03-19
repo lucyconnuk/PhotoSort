@@ -62,12 +62,17 @@ class Image:
 
     # instance method
     def load(self):
-
-        ## Get metadata
+        """
+        Load composite parts
+        """
         self.image_file.load_metadata()
+        self.load_camera()
+        self.load_image_expected_path()
 
-        ## Get camera, if possible 
+    # instance method
+    def load_camera(self):
         possible_cameras = self.get_matching_cameras( appConfig.cameras )
+        
         # If there is more or less than 1, log a warning
         if len(possible_cameras) != 1:
             logger.warning( f"Found {len(possible_cameras)} possible cameras for {self.image_file.metadata.camera_make} {self.image_file.metadata.camera_model} {self.image_file.metadata.date_taken}")
@@ -75,9 +80,12 @@ class Image:
         else:
             self.camera = possible_cameras[0]
 
-        ## If camera found, get path_format, if possible
+    # instance method
+    def load_image_expected_path(self):
         path_format = None
-        if self.camera and self.camera.owner and self.camera.image_capture_type: ### TODO move conditions 2 and 3 inside get_mpf?
+
+        # If camera found, get path_format, if possible
+        if self.camera:
             possible_pfs = self.camera.get_matching_path_formats( appConfig.path_formats )
 
             # If there is more or less than 1, log a warning
