@@ -8,7 +8,7 @@ from classes.Image import Image
 from classes.ImageFile import ImageFile
 
 
-def get_command_line_args():
+def get_command_line_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description = "List all image files in a directory and its subdirectories."
     )
