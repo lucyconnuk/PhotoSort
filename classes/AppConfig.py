@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-from pathlib import Path
 
 from classes.Camera import Camera
 from classes.Owner import Owner
@@ -12,7 +11,6 @@ class AppConfig:
     owners: list[Owner]
     path_formats: list[PathFormat]
     cameras: list[Camera]
-    root_image_dir: Path
 
     def __init__(self):
         

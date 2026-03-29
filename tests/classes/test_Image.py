@@ -134,10 +134,9 @@ def test_load(mocker):
     mocker.patch( "classes.ImageFile.ImageFile.load_metadata" )
     mocker.patch( "classes.Image.Image.load_camera" )
     mocker.patch( "classes.Image.Image.load_image_expected_path" )
-    mocker.patch( "classes.AppConfig.AppConfig.root_image_dir" )
 
     # Call the function under test
-    test_image.load()
+    test_image.load( "dummy" )
 
     # Check that the following functions were each called once
     test_image.image_file.load_metadata.assert_called_once()

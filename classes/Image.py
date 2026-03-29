@@ -76,13 +76,13 @@ class Image:
         return path_format
 
     # instance method
-    def load(self):
+    def load( self, destination_dir: Path ):
         """
         Load composite parts
         """
         self.image_file.load_metadata()
         self.load_camera()
-        self.load_image_expected_path( appConfig.root_image_dir )
+        self.load_image_expected_path( destination_dir )
 
     # instance method
     def load_camera(self):

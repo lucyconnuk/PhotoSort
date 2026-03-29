@@ -25,12 +25,22 @@ def main():
     # Get arguments from the default values, the command line, or the user.
     args = get_command_line_args()
     logger.info( f"Args are: {args}" )
-    path_str = args.path if args.path else input( "Enter path to the root image directory: " ).strip()
-    appConfig.root_image_dir = Path( path_str )
+    search_dir_str = args.path if args.path else input( "Enter path to the root image directory: " ).strip()
+    search_dir = Path( search_dir_str )
+    destination_dir = Path( "C:\\Users\\Public\\Pictures\\PhotoOrganizer" )
 
-    # Check that the root image directory path points to a valid directory.
-    (valid, message) = File.check_valid_path( appConfig.root_image_dir )
-    if valid:
+    # Check that the search directory path points to a valid directory.
+    (valid, message) = File.check_valid_path( search_dir )
+    if not valid:
+        logger.warning( message )
+        exit
+
+    # Check that the destination directory path points to a valid directory.
+    (valid, message) = File.check_valid_path( destination_dir )
+    if not valid:
+        logger.warning( message )
+
+    else:
         logger.info( message )
 
         logger.debug( "Cameras are: ")
@@ -41,26 +51,20 @@ def main():
         for path_format in appConfig.path_formats: logger.debug( path_format )
 
         # Find all the files in the directory.
-        files_and_dirs = appConfig.root_image_dir.rglob("*")
+        files_and_dirs = search_dir.rglob("*")
         file_paths = File.get_files( files_and_dirs )
         
         # Find all the image files in the set.
         image_paths = File.get_image_files( file_paths )
         logger.info( f"Found {len(image_paths)} images." )
         logger.debug( "Images are: ")
-        for image_path in image_paths: logger.debug( image_path.relative_to( appConfig.root_image_dir ) )
-
-        # # Find all the XMP files in the set.
-        # xmp_file_paths = File.get_xmp_files( file_paths )
-        # logger.info( f"Found {len(xmp_file_paths)} xmp files." )
-        # logger.debug( "XMP files are: ")
-        # for xmp_file_path in xmp_file_paths: logger.debug( xmp_file_path.relative_to( path ) )
+        for image_path in image_paths: logger.debug( image_path.relative_to( destination_dir ) )
 
         # Create Images, with their metadata, from image Paths
         images = []
         for image_path in image_paths:
             image = Image( ImageFile( image_path ) )
-            image.load()
+            image.load( destination_dir )
             images.append( image )
 
         logger.info( f"Created {len(images)} Image objects." )
@@ -71,9 +75,6 @@ def main():
         for image in images:
             if image.image_file.path != image.expected_path:
                 logger.warning( f"Image {image.image_file.path} should be at {image.expected_path}" )
-
-    else:
-        logger.warning( message )
 
 if __name__ == "__main__":
     main()
