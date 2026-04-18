@@ -29,6 +29,7 @@ class AppLogger:
         start_time_text = start_time.strftime("%Y%m%dT%H%M%S")
 
         ### TODO - this is being shared, sort it out
+        ### TODO - logs dir needs to exist!!!
         logging.basicConfig( 
             filename = fr'logs\photosort-{start_time_text}.log', 
             level = logging.DEBUG,
