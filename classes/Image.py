@@ -19,7 +19,7 @@ class Image:
     #sidecar_filename: Optional[Path] = None
 
     # instance method
-    def get_expected_path( self, root_image_dir: Path, path_format: PathFormat) -> Path:
+    def get_expected_path( self, destination_image_dir: Path, path_format: PathFormat) -> Path:
         """
         Get expected_path from path_format and data
         """
@@ -34,7 +34,7 @@ class Image:
         for path_modifier in path_modifiers:
             path = path_modifier.modify_path( path )
 
-        return root_image_dir.joinpath( path ).joinpath( self.image_file.path.name )
+        return destination_image_dir.joinpath( path ).joinpath( self.image_file.path.name )
 
     # instance method
     def get_matching_cameras( self, cameras: list[Camera] ) -> list[Camera]:
@@ -99,7 +99,7 @@ class Image:
             self.camera = possible_cameras[0]
 
     # instance method
-    def load_image_expected_path(self, root_image_dir):
+    def load_image_expected_path(self, destination_image_dir):
         """
         Load image expected path
         """
@@ -111,6 +111,6 @@ class Image:
 
         ## If path_format found, get image_expected_path
         if path_format:
-            self.expected_path = self.get_expected_path( root_image_dir, path_format )
+            self.expected_path = self.get_expected_path( destination_image_dir, path_format )
             logger.info( f"Expected path: {self.expected_path}")
             logger.info( f"Expected path == Actual path: {self.expected_path == self.image_file.path}")

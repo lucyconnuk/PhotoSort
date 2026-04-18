@@ -13,14 +13,14 @@ class File:
     file_path: Path
 
     @staticmethod
-    def check_valid_path( path: Path ) -> tuple[ bool, str ]:
+    def check_valid_path( label: str, path: Path ) -> tuple[ bool, str ]:
         path_is_valid = False
         message = ''
 
         if path.exists():
             if path.is_dir():
                 path_is_valid = True
-                message = f"Directory is: {path}"
+                message = f"{label} directory is: {path}"
             elif path.is_file():
                 message = f"{path} is a file"
             else:

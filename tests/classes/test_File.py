@@ -7,7 +7,7 @@ from classes.File import File
 test_check_valid_path_data = [
 
     # Path() returns the current directory.
-    ( Path(), [True, "Directory is: ."] ),
+    ( Path(), [True, "Label directory is: ."] ),
 
     # Path(__file__) returns the current file.
     ( Path(__file__), [False, f"{__file__} is a file"] ),
@@ -18,7 +18,7 @@ test_check_valid_path_data = [
 
 @pytest.mark.parametrize( "args, expected", test_check_valid_path_data )
 def test_check_valid_path( args, expected ):
-    (valid, message) = File.check_valid_path( args )
+    (valid, message) = File.check_valid_path( "Label", args )
     assert valid == expected[0]
     assert message == expected[1]
 
@@ -32,7 +32,7 @@ def test_check_valid_path_unknown_type( mocker ):
     mocker.patch( "pathlib.Path.is_file", return_value = False )
 
     # Call the function under test with mock_path
-    (valid, message) = File.check_valid_path( mock_path )
+    (valid, message) = File.check_valid_path( "unused", mock_path )
 
     # Check that mock_path functions were called once
     mock_path.exists.assert_called_once()
