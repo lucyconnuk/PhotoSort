@@ -8,10 +8,11 @@ import piexif
 from classes.PathModifier import PathModifier
 
 # Metadata constants
-SECTION = "0th"
+MAKE_MODEL_SECTION = "0th"
 MAKE_KEY = "Make"
 MODEL_KEY = "Model"
-DATETIME_KEY = "DateTime"
+DATETIME_SECTION = "Exif"
+DATETIME_KEY = "DateTimeOriginal"
 DATE_FORMAT = "%Y:%m:%d %H:%M:%S"
 
 PATH_TOKENS = {
@@ -46,9 +47,9 @@ class ImageMetadata(PathModifier):
         image_metadata = piexif.load( str( image_path ), True )
 
         # Get camera make and model and date image taken from the metadata.
-        make = ImageMetadata.get_string( image_metadata, SECTION, MAKE_KEY )
-        model = ImageMetadata.get_string( image_metadata, SECTION, MODEL_KEY )
-        date = ImageMetadata.get_date( cls.get_string( image_metadata, SECTION, DATETIME_KEY ) )
+        make = ImageMetadata.get_string( image_metadata, MAKE_MODEL_SECTION, MAKE_KEY )
+        model = ImageMetadata.get_string( image_metadata, MAKE_MODEL_SECTION, MODEL_KEY )
+        date = ImageMetadata.get_date( cls.get_string( image_metadata, DATETIME_SECTION, DATETIME_KEY ) )
 
         # Call the class constructor with this data.
         return cls( make, model, date )

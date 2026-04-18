@@ -9,15 +9,13 @@ from classes.ImageMetadata import ImageMetadata
 def test_from_path(mocker):
 
     # Create mock metadata to return from piexif.load()
-    # metadata_0th = []
-    # metadata_0th['Make'] = b"Canon"
-    # metadata_0th['Model'] = b"EOS Rebel T6"
-    # metadata_0th['DateTime'] = b"2021:02:03 04:05:06"
     metadata = {
         "0th": { 
             'Make': b"Canon", 
-            'Model': b"EOS Rebel T6", 
-            'DateTime': b"2021:02:03 04:05:06" 
+            'Model': b"EOS Rebel T6"
+        },
+        "Exif": { 
+            'DateTimeOriginal': b"2021:02:03 04:05:06" 
         }
     }
 
