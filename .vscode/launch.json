@@ -24,6 +24,17 @@
             ],
         },
         {
+            "name": "Run PhotoSort on large dir (417 images)",
+            "type": "debugpy",
+            "request": "launch",
+            "console": "integratedTerminal",
+            "module": "photosort",
+            "args": [ 
+                "-s", "C:\\Users\\Public\\Pictures\\PhotoOrganizer\\Digital\\Mary",
+                "-d", "C:\\Users\\Public\\Pictures\\PhotoOrganizer" 
+            ],
+        },
+        {
             "name": "Run PhotoSort without arguments",
             "type": "debugpy",
             "request": "launch",
