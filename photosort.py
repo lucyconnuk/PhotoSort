@@ -88,9 +88,13 @@ def main():
 
     # Determine which images are in the wrong place by comparing image_path with expected_path
     image: Image
+    # TODO: Do filename better
+    report_file = open( "move_files.bat", "a" )
     for image in images:
         if image.image_file.path != image.expected_path:
             logger.warning( f"Image {image.image_file.path} should be at {image.expected_path}" )
+            print( f"move \"{image.image_file.path}\" \"{image.expected_path}\"", file = report_file )
+    report_file.close()
 
 if __name__ == "__main__":
     main()
