@@ -1,7 +1,9 @@
 from dataclasses import dataclass
 from pathlib import Path
 
-IMAGE_EXTENSIONS = {'.jpg', '.jpeg', '.png', '.gif', '.bmp', '.tiff', '.webp'}
+# Not all image extensions can be handled by piexif
+#IMAGE_EXTENSIONS = {'.jpg', '.jpeg', '.png', '.gif', '.bmp', '.tiff', '.webp'}
+IMAGE_EXTENSIONS = {'.jpg', '.jpeg', '.tiff', '.webp'}
 
 # For additional coding notes, see Camera.py
 @dataclass( frozen=True, slots=True )
